@@ -1,0 +1,21 @@
+# Node / Angular
+frontend/web/node_modules/
+frontend/web/dist/
+frontend/web/.angular/
+npm-debug.log*
+
+# Python / Django
+backend/.venv/
+.ml/
+**/__pycache__/
+*.py[cod]
+db/sqlite/db.sqlite3
+
+# Env / Secrets
+.env
+.env.*
+*.log
+
+# System files
+.DS_Store
+Thumbs.db

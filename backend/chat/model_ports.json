@@ -1,0 +1,7 @@
+{
+  "loewith": {"gpu": 8001, "cpu": 8101},
+  "gehlen": {"gpu": 8002, "cpu": 8102},
+  "kant": {"gpu": 8003, "cpu": 8103},
+  "plessner": {"gpu": 8004, "cpu": 8104},
+  "marx": {"gpu": 8005, "cpu": 8105}
+}
