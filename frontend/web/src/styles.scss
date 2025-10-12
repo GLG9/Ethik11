@@ -365,17 +365,20 @@ ul {
   justify-items: stretch;
 }
 
+
 .philosopher-strip {
+  --strip-gap: clamp(0.4rem, 0.8vw, 0.75rem);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(0.4rem, 0.8vw, 0.75rem);
+  gap: var(--strip-gap);
   width: 100%;
   margin: 0;
-  padding: 0 clamp(0.5rem, 1.5vw, 1rem);
+  padding: 0 var(--strip-gap);
   list-style: none;
 }
 
 .strip-item {
+  --strip-scale: 1;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -385,6 +388,8 @@ ul {
   border: 1px solid rgba(58, 47, 39, 0.7);
   background: transparent;
   padding: clamp(0.25rem, 0.5vw, 0.4rem);
+  transform: scale(var(--strip-scale));
+  transform-origin: center;
   transition: transform 0.3s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
 
@@ -408,7 +413,7 @@ ul {
 
 .strip-item:hover,
 .strip-item:focus-visible {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(var(--strip-scale));
   border-color: var(--accent);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
 }
@@ -760,24 +765,17 @@ button:focus-visible {
   .hero {
     max-width: 90vw;
     margin: 0 auto;
-    padding: clamp(1.2rem, 2vw, 1.8rem) clamp(1.5rem, 2.5vw, 2.4rem) clamp(1.1rem, 2.2vw, 1.8rem);
+    padding: clamp(1.2rem, 2vw, 1.8rem) clamp(1.4rem, 2.3vw, 2.2rem) clamp(1.1rem, 2.2vw, 1.8rem);
   }
 
   .philosopher-strip {
+    --strip-gap: clamp(0.5rem, 1vw, 1.2rem);
     width: 100%;
-    gap: clamp(0.5rem, 1vw, 1.2rem);
-    padding: 0 clamp(1.2rem, 2.1vw, 2.4rem);
+    padding: 0 var(--strip-gap);
   }
 
   .strip-item {
-    width: 90%;
-    margin: 0 auto;
-    padding: clamp(0.2rem, 0.4vw, 0.35rem);
-    border-radius: clamp(0.7rem, 1.5vw, 1.1rem);
-  }
-
-  .strip-item img {
-    border-radius: clamp(0.55rem, 1.2vw, 0.95rem);
+    --strip-scale: 0.9;
   }
 }
 
