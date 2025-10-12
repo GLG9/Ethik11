@@ -330,7 +330,10 @@ ul {
   top: 0;
   z-index: 100;
   background: linear-gradient(180deg, rgba(26, 20, 17, 0.98) 0%, rgba(26, 20, 17, 0.9) 65%, rgba(26, 20, 17, 0) 100%);
-  padding: 2.5rem 1.25rem 0.85rem;
+  height: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
   backdrop-filter: blur(14px);
 }
 
@@ -359,9 +362,9 @@ ul {
 
 .hero {
   width: 100%;
-  padding: clamp(1.5rem, 2.5vw, 2rem) clamp(0.5rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(0.4rem, 1vw, 0.8rem) clamp(0.5rem, 1.5vw, 1rem) clamp(0.8rem, 2.3vw, 1.5rem);
   display: grid;
-  gap: clamp(0.9rem, 1.8vw, 1.5rem);
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
   justify-items: stretch;
 }
 
@@ -720,7 +723,7 @@ button:focus-visible {
 
 @media (min-width: 901px) {
   .site-header {
-    padding: 5rem 2rem 1.25rem;
+    padding: 0;
   }
 
   main {
@@ -748,7 +751,7 @@ button:focus-visible {
 
 @media (min-width: 1281px) {
   .site-header {
-    padding: 5.25rem 3rem 1.5rem;
+    padding: 0;
   }
 
   main {
@@ -765,7 +768,7 @@ button:focus-visible {
   .hero {
     max-width: 90vw;
     margin: 0 auto;
-    padding: clamp(1.2rem, 2vw, 1.8rem) clamp(1.4rem, 2.3vw, 2.2rem) clamp(1.1rem, 2.2vw, 1.8rem);
+    padding: clamp(0.4rem, 0.9vw, 0.8rem) clamp(1.2rem, 2vw, 2rem) clamp(1rem, 2.1vw, 1.6rem);
   }
 
   .philosopher-strip {
