@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    command: ["./start-dev.sh"]
+    working_dir: /workspace
+    ports:
+      - "3000:3000"
+      - "4200:4200"
+    volumes:
+      - ..:/workspace
+      - backend_venv:/workspace/backend/.venv
+      - frontend_node_modules:/workspace/frontend/web/node_modules
+      - sqlite_data:/workspace/db/sqlite
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+volumes:
+  backend_venv:
+  frontend_node_modules:
+  sqlite_data:
