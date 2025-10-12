@@ -340,7 +340,7 @@ ul {
 .site-heading {
   width: 100%;
   margin: 0;
-  padding: clamp(0.6rem, 2vw, 1.4rem) clamp(1rem, 4vw, 3rem) 0;
+  padding: clamp(0.6rem, 2vw, 1.2rem) 0 0;
   text-align: center;
 }
 
@@ -358,6 +358,28 @@ ul {
   font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
   margin: 0;
   letter-spacing: -0.01em;
+}
+
+/* Titel direkt als vollbreiter, „gerader“ Kasten in hellbraun */
+.site-title--bleed {
+  display: block;
+  background: var(--accent);      /* hellbraun */
+  color: var(--bg);               /* dunkler Text auf hellbraunem Grund */
+  padding: clamp(0.6rem, 1.4vw, 1rem) clamp(1rem, 3vw, 2rem);
+  border-radius: 0;               /* gerade Kanten */
+  box-shadow: none;
+
+  /* Full-bleed korrekt ab linker Kante */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%); /* verhindert „Start ab der Hälfte“ */
+  margin: clamp(0.4rem, 1vw, 0.8rem) 0 0;
+}
+
+/* Optional: stabilere Breite auf mobilen Browsern mit dynamischen Viewports */
+@supports (width: 100dvw) {
+  .site-title--bleed { width: 100dvw; }
 }
 
 .hero {
