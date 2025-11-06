@@ -1,14 +1,274 @@
-<nav class="nav">
-  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Start</a>
-  <a routerLink="/loewith" routerLinkActive="active">Löwith</a>
-  <a routerLink="/gehlen" routerLinkActive="active">Gehlen</a>
-  <a routerLink="/kant" routerLinkActive="active">Kant</a>
-  <a routerLink="/plessner" routerLinkActive="active">Plessner</a>
-  <a routerLink="/marx" routerLinkActive="active">Marx</a>
-  <a routerLink="/quiz" routerLinkActive="active">Quiz</a>
-  <a routerLink="/quiz/leaderboard" routerLinkActive="active">Leaderboard</a>
-  <a routerLink="/admin" routerLinkActive="active">Admin</a>
-</nav>
-<main>
-  <router-outlet />
-</main>
+<a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+
+<div #menuStatus id="menu-status" class="sr-only" aria-live="polite"></div>
+
+<div
+  #overlay
+  class="overlay"
+  [class.is-visible]="menuOpen"
+  (click)="closeMenu()"
+  aria-hidden="true"
+></div>
+
+<aside
+  #offcanvas
+  class="offcanvas"
+  id="site-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="menuTitle"
+  [attr.aria-hidden]="menuOpen ? 'false' : 'true'"
+  [class.is-open]="menuOpen"
+  (keydown)="handleMenuKeydown($event)"
+>
+  <div class="offcanvas__header">
+    <h2 id="menuTitle">Menü</h2>
+    <button
+      type="button"
+      class="icon-button"
+      (click)="closeMenu()"
+      [attr.tabindex]="menuOpen ? null : '-1'"
+      #menuClose
+    >
+      <span class="sr-only">Menü schließen</span>
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <nav class="offcanvas__nav" aria-label="Hauptnavigation">
+    <div class="menu-group">
+      <a
+        class="menu-link menu-link--primary"
+        routerLink="/"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu(false)"
+        [attr.tabindex]="menuOpen ? null : '-1'"
+      >
+        Hauptseite
+      </a>
+    </div>
+
+    <div class="menu-section">
+      <p class="menu-section__label">KI-Modelle</p>
+      <ul class="menu-list menu-list--slim">
+        <li *ngFor="let model of kiNavigation">
+          <a
+            class="menu-link"
+            [routerLink]="model.route"
+            routerLinkActive="is-active"
+            (click)="closeMenu(false)"
+            [attr.tabindex]="menuOpen ? null : '-1'"
+          >
+            <span>{{ model.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="menu-list__utility">
+      <div class="menu-progress" role="status" aria-live="polite">
+        <div class="menu-progress__label">
+          {{ visitedCount }} / {{ totalModels }} Modelle befragt
+        </div>
+        <div class="menu-progress__bar" aria-hidden="true">
+          <div
+            class="menu-progress__fill"
+            [style.width.%]="(visitedCount / totalModels) * 100"
+          ></div>
+        </div>
+      </div>
+      <a
+        *ngIf="visitedCount >= totalModels; else quizLocked"
+        class="menu-link menu-link--primary"
+        routerLink="/quiz"
+        (click)="closeMenu(false)"
+      >
+        Quiz starten
+      </a>
+      <ng-template #quizLocked>
+        <button
+          type="button"
+          class="menu-link menu-link--disabled"
+          aria-disabled="true"
+          tabindex="-1"
+          data-tooltip="Stelle erst allen KI-Modellen eine Frage"
+          (mouseenter)="announceSoon()"
+          (pointerdown)="announceSoon($event)"
+        >
+          Quiz gesperrt
+        </button>
+      </ng-template>
+    </div>
+  </nav>
+</aside>
+
+<header id="site-header" class="site-header">
+  <button
+    type="button"
+    class="hamburger"
+    [attr.aria-expanded]="menuOpen ? 'true' : 'false'"
+    aria-controls="site-menu"
+    (click)="toggleMenu()"
+    #menuToggle
+  >
+    <span class="sr-only">Navigation öffnen</span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </button>
+</header>
+
+<ng-container *ngIf="showLanding; else routedContent">
+  <section class="hero" aria-labelledby="hero-title">
+    <ul class="philosopher-strip" aria-label="Philosophen Galerie">
+      <li *ngFor="let philosopher of philosophers">
+        <button
+          type="button"
+          class="strip-item"
+          [class.is-active]="currentSection === philosopher.id"
+          (click)="onStripClick(philosopher.id)"
+          [attr.aria-current]="currentSection === philosopher.id ? 'true' : null"
+        >
+          <img
+            [src]="philosopher.portrait.thumb"
+            [alt]="philosopher.portrait.alt"
+            loading="lazy"
+            decoding="async"
+            width="300"
+            height="300"
+          />
+          <span class="strip-caption">{{ philosopher.name }}</span>
+        </button>
+      </li>
+    </ul>
+    <div class="site-heading">
+      <h1 id="hero-title" class="site-title site-title--bleed">Philosophische Menschenbilder</h1>
+    </div>
+  </section>
+
+  <main id="main-content">
+    <section
+      id="intro"
+      class="intro scroll-target"
+      tabindex="-1"
+      #scrollTargetElement
+    >
+      <div class="intro__inner">
+        <p>
+          Diese Ausstellung führt durch fünf prägende Perspektiven auf das Menschenbild und verknüpft historische Kontexte mit aktuellen Fragen. Die Szenografie ist inspiriert von musealen Führungen: ruhige Übergänge, präzise Schlüsselideen, vergleichende Blickachsen.
+        </p>
+      </div>
+    </section>
+
+    <div id="philosopher-sections" class="philosopher-collection">
+      <section
+        *ngFor="let philosopher of philosophers; let index = index"
+        class="philosopher-section scroll-target"
+        [attr.id]="philosopher.id"
+        tabindex="-1"
+        #scrollTargetElement
+      >
+        <div class="philosopher-inner">
+          <figure class="philosopher-figure">
+            <img
+              [src]="philosopher.portrait.thumb"
+              [alt]="philosopher.portrait.alt"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="640"
+              sizes="(min-width: 1281px) 420px, (min-width: 901px) 360px, (min-width: 601px) 50vw, 80vw"
+            />
+            <figcaption>{{ philosopher.portrait.caption }}</figcaption>
+          </figure>
+          <div class="philosopher-content">
+            <header class="philosopher-header">
+              <h2>{{ philosopher.name }}</h2>
+              <p class="philosopher-vita">
+                Lebensdaten: {{ philosopher.life }}<ng-container *ngIf="philosopher.epoch"> • Epoche: {{ philosopher.epoch }}</ng-container>
+              </p>
+              <p class="philosopher-abstract">
+                {{ philosopher.summary }}
+              </p>
+              <p class="philosopher-highlight" *ngIf="philosopher.keyline">
+                {{ philosopher.keyline }}
+              </p>
+            </header>
+            <div class="philosopher-ideas">
+              <h3>Hauptideen</h3>
+              <ul>
+                <li *ngFor="let idea of philosopher.ideas">
+                  {{ idea }}
+                </li>
+              </ul>
+            </div>
+            <blockquote class="philosopher-quote" *ngIf="philosopher.quote">
+              „{{ philosopher.quote }}”
+              <cite *ngIf="philosopher.quoteSource">{{ philosopher.quoteSource }}</cite>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section
+      id="vergleichen"
+      class="compare-section scroll-target"
+      tabindex="-1"
+      #scrollTargetElement
+    >
+      <header class="section-header">
+        <h2>Vergleichen</h2>
+        <p class="section-subtitle">
+          Ein schneller Blick auf Gemeinsamkeiten, Differenzen und kritische Hinweise.
+        </p>
+      </header>
+
+      <div id="compare-cards" class="compare-cards" aria-live="polite">
+        <article class="compare-card" *ngFor="let philosopher of philosophers">
+          <h3>{{ philosopher.name }}</h3>
+          <dl>
+            <ng-container *ngFor="let row of compareRows">
+              <dt>{{ row.label }}</dt>
+              <dd>{{ row.values[philosopher.id] }}</dd>
+            </ng-container>
+          </dl>
+        </article>
+      </div>
+
+      <div class="compare-table__wrap">
+        <table class="compare-table" aria-describedby="compare-caption">
+          <caption id="compare-caption" class="sr-only">
+            Vergleich der Menschenbilder von Plessner, Marx, Kant, Gehlen und Löwith.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Kategorie</th>
+              <th *ngFor="let philosopher of philosophers" scope="col">
+                {{ philosopher.name }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of compareRows">
+              <th scope="row">{{ row.label }}</th>
+              <td *ngFor="let philosopher of philosophers">
+                {{ row.values[philosopher.id] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</ng-container>
+
+<ng-template #routedContent>
+  <section class="ki-page">
+    <router-outlet></router-outlet>
+  </section>
+</ng-template>
+
+<footer class="site-footer">
+  <small>Kuratiert für den digitalen Seminarraum &ndash; inspiriert von Klassikern der philosophischen Anthropologie.</small>
+</footer>

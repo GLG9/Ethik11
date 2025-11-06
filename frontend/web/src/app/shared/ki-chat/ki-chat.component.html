@@ -1,0 +1,59 @@
+<section class="ki-shell">
+  <header class="ki-hero">
+    <div class="ki-hero__titles">
+      <p class="ki-hero__eyebrow">KI-Modell</p>
+      <h2 class="ki-hero__title">{{ displayName }}</h2>
+      <p class="ki-hero__lead" *ngIf="lead">{{ lead }}</p>
+    </div>
+    <ul class="ki-tags" *ngIf="focusTopics.length > 0">
+      <li *ngFor="let topic of focusTopics">{{ topic }}</li>
+    </ul>
+  </header>
+
+  <div class="ki-chat">
+    <div class="ki-chat__thread" #thread>
+      <article
+        *ngFor="let message of messages"
+        class="ki-bubble"
+        [ngClass]="{
+          'ki-bubble--user': message.role === 'user',
+          'ki-bubble--assistant': message.role === 'assistant',
+          'ki-bubble--pending': message.pending,
+          'ki-bubble--error': message.error
+        }"
+      >
+        <div class="ki-bubble__meta">
+          <span class="ki-bubble__role">
+            {{ message.role === 'user' ? 'Du' : displayName }}
+          </span>
+          <time class="ki-bubble__time">{{ message.timestamp | date: 'HH:mm' }}</time>
+        </div>
+        <p class="ki-bubble__content">
+          {{ message.content }}
+          <span class="ki-bubble__spinner" *ngIf="message.pending" aria-hidden="true"></span>
+        </p>
+      </article>
+    </div>
+
+    <form class="ki-chat__composer" [formGroup]="form" (submit)="submit()">
+      <label class="sr-only" for="prompt">Frage stellen</label>
+      <textarea
+        id="prompt"
+        rows="3"
+        formControlName="prompt"
+        placeholder="Formuliere deine Frage …"
+        (keydown)="handleKeydown($event)"
+      ></textarea>
+      <div class="ki-chat__composer-actions">
+        <button
+          type="submit"
+          class="composer-button"
+          [disabled]="form.invalid || form.disabled"
+        >
+          Senden
+        </button>
+        <small class="ki-chat__hint">Shift + Enter für Zeilenumbruch</small>
+      </div>
+    </form>
+  </div>
+</section>
