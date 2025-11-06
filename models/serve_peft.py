@@ -19,7 +19,24 @@ import anyio
 # -------------------------
 # Konfiguration
 # -------------------------
-BASE = os.environ.get("BASE_MODEL", "Qwen/Qwen2.5-7B-Instruct")
+ALIAS_MAP = {
+    "deepseek-r1:7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1-7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+}
+
+
+def resolve_model_id(name: str) -> str:
+    override = os.environ.get("BASE_MODEL_HF")
+    if override:
+        return override
+    return ALIAS_MAP.get(name, name)
+
+
+BASE_ALIAS = os.environ.get("BASE_MODEL", "deepseek-r1:7b")
+BASE = resolve_model_id(BASE_ALIAS)
+if BASE != BASE_ALIAS:
+    print(f"INFO: Lade Basismodell '{BASE}' für Alias '{BASE_ALIAS}'.")
 ADAPTERS: Dict[str, str] = {
     "loewith":  "out/loewith_lora",
     "gehlen":   "out/gehlen_lora",

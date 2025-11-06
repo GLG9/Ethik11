@@ -2,22 +2,27 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { QuizResultDto, QuizService } from '../quiz/quiz.service';
+import {
+  LeaderboardResponse,
+  QuizResultDto,
+  QuizService,
+} from './quiz.service';
 
 @Component({
-  selector: 'app-admin',
+  selector: 'app-quiz-leaderboard',
   standalone: true,
   imports: [CommonModule, RouterLink, DatePipe],
-  templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss',
+  templateUrl: './leaderboard.component.html',
+  styleUrl: './leaderboard.component.scss',
 })
-export class AdminComponent implements OnInit {
+export class LeaderboardComponent implements OnInit {
   private readonly quizService = inject(QuizService);
 
+  metadata: LeaderboardResponse['metadata'] | null = null;
   entries: QuizResultDto[] = [];
   isLoading = true;
   errorMessage = '';
-  clearing = false;
+  highlightId = this.quizService.getLastResultId();
 
   ngOnInit(): void {
     this.load();
@@ -28,35 +33,13 @@ export class AdminComponent implements OnInit {
     this.errorMessage = '';
     this.quizService.leaderboard().subscribe({
       next: (response) => {
+        this.metadata = response.metadata;
         this.entries = response.entries;
         this.isLoading = false;
       },
       error: () => {
-        this.errorMessage = 'Daten konnten nicht geladen werden.';
+        this.errorMessage = 'Leaderboard konnte nicht geladen werden.';
         this.isLoading = false;
-      },
-    });
-  }
-
-  clearLeaderboard(): void {
-    if (this.clearing) {
-      return;
-    }
-    const confirmation = window.confirm(
-      'Leaderboard wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.'
-    );
-    if (!confirmation) {
-      return;
-    }
-    this.clearing = true;
-    this.quizService.clearLeaderboard().subscribe({
-      next: () => {
-        this.clearing = false;
-        this.load();
-      },
-      error: () => {
-        this.clearing = false;
-        this.errorMessage = 'Löschen fehlgeschlagen.';
       },
     });
   }

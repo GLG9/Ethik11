@@ -60,7 +60,7 @@ class RowState:
 async def stream_one(base_url: str, row: RowState, client: httpx.AsyncClient):
     url = f"{base_url.rstrip('/')}/v1/chat/completions"
     payload = {
-        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "model": "deepseek-r1:7b",
         "messages": [
             {"role": "system", "content": "Antworte ausschließlich auf Deutsch."},
             {"role": "user", "content": row.prompt},

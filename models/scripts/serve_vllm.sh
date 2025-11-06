@@ -7,7 +7,23 @@ cd "${MODELS_DIR}"
 
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 
-MODEL_ID="${MODEL_ID:-Qwen/Qwen2.5-7B-Instruct}"
+resolve_model_id() {
+  if [[ -n "${BASE_MODEL_HF:-}" ]]; then
+    echo "${BASE_MODEL_HF}"
+    return
+  fi
+  case "$1" in
+    deepseek-r1:7b|deepseek-r1-7b|deepseek-r1)
+      echo "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+      ;;
+    *)
+      echo "$1"
+      ;;
+  esac
+}
+
+MODEL_ID="${MODEL_ID:-deepseek-r1:7b}"
+RESOLVED_MODEL_ID="$(resolve_model_id "${MODEL_ID}")"
 HOST="${HOST:-127.0.0.1}"
 PORT="${PORT:-9000}"
 
@@ -33,7 +49,7 @@ if ! command -v vllm >/dev/null 2>&1; then
   exit 1
 fi
 
-vllm serve "${MODEL_ID}" \
+vllm serve "${RESOLVED_MODEL_ID}" \
   --dtype float16 \
   --enable-lora \
   --lora-modules "${LORA_ARGS[@]}" \
@@ -47,4 +63,5 @@ vllm serve "${MODEL_ID}" \
   --swap-space 8 \
   --max-loras 1 \
   --max-cpu-loras 5 \
-  --enforce-eager
+  --enforce-eager \
+  --served-model-name "${MODEL_ID}"

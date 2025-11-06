@@ -6,7 +6,7 @@ MODELS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${MODELS_DIR}"
 
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
-export BASE_MODEL="${BASE_MODEL:-Qwen/Qwen2.5-7B-Instruct}"
+export BASE_MODEL="${BASE_MODEL:-deepseek-r1:7b}"
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 
 DATASETS=(
@@ -33,6 +33,6 @@ for dataset in "${DATASETS[@]}"; do
     continue
   fi
 
-  echo "Running: python train_sft.py --qlora --data ${data_path} --out ${out_dir}"
-  python train_sft.py --qlora --data "${data_path}" --out "${out_dir}"
+  echo "Running: python train_sft.py --qlora --base ${BASE_MODEL} --data ${data_path} --out ${out_dir}"
+  python train_sft.py --qlora --base "${BASE_MODEL}" --data "${data_path}" --out "${out_dir}"
 done

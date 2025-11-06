@@ -1,21 +1,18 @@
-<div class="admin-shell">
+<div class="leaderboard-shell">
   <header>
     <div>
-      <h1>Admin · Quiz Leaderboard</h1>
-      <p>Einsehen und verwalten der aktuellen Einsendungen.</p>
+      <h1>Leaderboard</h1>
+      <p *ngIf="metadata">Sortiert nach richtigen Antworten → Zeit → Einreichungszeit.</p>
     </div>
     <div class="actions">
-      <a routerLink="/quiz" class="ghost">Zum Quiz</a>
+      <a routerLink="/quiz" class="ghost">Zurück zum Quiz</a>
       <button type="button" class="ghost" (click)="load()">Aktualisieren</button>
-      <button type="button" class="danger" (click)="clearLeaderboard()" [disabled]="clearing">
-        {{ clearing ? 'Lösche…' : 'Leaderboard leeren' }}
-      </button>
     </div>
   </header>
 
   <section *ngIf="isLoading" class="state-card">
     <div class="spinner"></div>
-    <p>Lade Ergebnisse…</p>
+    <p>Lade Leaderboard...</p>
   </section>
 
   <section *ngIf="!isLoading && errorMessage" class="state-card error">
@@ -30,22 +27,20 @@
           <th>Platz</th>
           <th>Name</th>
           <th>Richtig</th>
-          <th>Zeit (mm:ss)</th>
-          <th>Zeit (ms)</th>
+          <th>Zeit</th>
           <th>Datum</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let entry of entries">
+        <tr *ngFor="let entry of entries" [class.highlight]="entry.id === highlightId">
           <td>#{{ entry.rank }}</td>
           <td>{{ entry.name }}</td>
           <td>{{ formatScore(entry) }}</td>
           <td>{{ formatTime(entry) }}</td>
-          <td>{{ entry.timeMs | number }}</td>
           <td>{{ entry.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
         </tr>
         <tr *ngIf="!entries.length">
-          <td colspan="6" class="empty">Keine Einträge vorhanden.</td>
+          <td colspan="5" class="empty">Noch keine Einträge vorhanden.</td>
         </tr>
       </tbody>
     </table>

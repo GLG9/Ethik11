@@ -12,6 +12,56 @@ Ethik-Projekt — Grundgerüste und Dev-Server.
 ```
 Der Helfer richtet bei Bedarf `backend/.venv`, führt Migrationen aus, startet `uvicorn` auf `0.0.0.0:3000` und `ng serve` auf `0.0.0.0:4200`. Strg+C beendet beide Prozesse.
 
+### vLLM/OpenAI-Endpunkt
+
+- `./start-dev.sh` startet zusätzlich das Skript `models/scripts/serve_vllm.sh`. Es nutzt die virtuelle Umgebung `models/.venv` (dort muss `vllm` installiert sein) und bindet den OpenAI-kompatiblen HTTP-Server auf `http://0.0.0.0:9000`. Das Skript akzeptiert das Alias `deepseek-r1:7b` und lädt intern `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` (überschreibbar via `BASE_MODEL_HF`).
+- Empfohlenes vLLM-Setup (separate Umgebung):
+  ```bash
+  python3 -m venv /root/ethik/.venv_vllm
+  source /root/ethik/.venv_vllm/bin/activate
+  pip install -U "torch==2.4.0+cu121" --index-url https://download.pytorch.org/whl/cu121
+  pip install vllm==0.5.4
+  ```
+- Verfügbare Modelle (Basismodell + LoRA-Adapter wie `kant`, `marx`, `gehlen`, `plessner`, `loewith`) anzeigen:
+  ```bash
+  curl http://0.0.0.0:9000/v1/models | jq
+  ```
+- Beispiel-Request gegen das Basismodell:
+  ```bash
+  curl http://0.0.0.0:9000/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "deepseek-r1:7b",
+      "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Fasse Kants Kategorischen Imperativ in zwei Sätzen zusammen."}
+      ],
+      "temperature": 0.2
+    }'
+  ```
+- Einen Philosophen-LoRA laden, indem der Adaptername als Modell gesetzt wird (z. B. `kant`):
+  ```bash
+  curl http://0.0.0.0:9000/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "marx",
+      "messages": [
+        {"role": "system", "content": "Du antwortest im Denken Immanuel Kants und bliebst immer bei maximal 4 Sätzen."},
+        {"role": "user", "content": "Was macht dein Menschenbild aus?"}
+      ]
+    }'
+  ```
+- LoRA-Training (DeepSeek-R1 7B) läuft über eine dedizierte Umgebung:
+  ```bash
+  python3 -m venv /root/ethik/.venv_r1
+  source /root/ethik/.venv_r1/bin/activate
+  pip install -U "torch==2.4.0+cu121" --index-url https://download.pytorch.org/whl/cu121
+  pip install -U transformers==4.42.4 accelerate==0.34.2 bitsandbytes==0.43.2 trl==0.9.6 datasets==2.19.2 peft==0.12.0
+  cd models
+  ./scripts/train_all.sh
+  ```
+- Für Python-Clients (`openai`-SDK): `export OPENAI_API_BASE=http://0.0.0.0:9000/v1` und `export OPENAI_API_KEY=dummy` setzen, anschließend wie gewohnt `client.chat.completions.create(model="kant", ...)` verwenden.
+
 ### Frontend
 ```bash
 cd frontend/web

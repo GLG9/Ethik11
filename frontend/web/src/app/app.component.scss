@@ -1,30 +1,44 @@
 :host {
   display: block;
   min-height: 100vh;
-  background-color: #f5f5f5;
-  color: #1f1f1f;
-  font-family: 'Arial', sans-serif;
+  background: radial-gradient(circle at top, #2c1d14 0%, #120a06 60%);
+  color: #f8ede3;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
 .nav {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 1.5rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #d0d0d0;
+  padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem);
+  background: rgba(26, 17, 11, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(252, 227, 205, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 .nav a {
-  color: inherit;
+  color: rgba(248, 237, 227, 0.82);
   text-decoration: none;
   font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.nav a:hover,
+.nav a:focus-visible {
+  background: rgba(252, 217, 182, 0.15);
+  color: #fdf2e3;
 }
 
 .nav a.active {
-  text-decoration: underline;
+  background: linear-gradient(135deg, rgba(243, 194, 139, 0.8), rgba(212, 139, 76, 0.8));
+  color: #24160f;
 }
 
 main {
-  padding: 2rem;
+  padding: clamp(1.5rem, 5vw, 3rem);
 }

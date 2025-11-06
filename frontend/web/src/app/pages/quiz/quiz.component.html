@@ -1,1 +1,178 @@
-<h1>Quiz</h1>
+<div class="quiz-shell" [class.sidebar-open]="sidebarOpen" [class.reduced-motion]="prefersReducedMotion">
+  <header class="quiz-header">
+    <button class="hamburger" type="button" (click)="toggleSidebar()" aria-label="Menü umschalten">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="header-content">
+      <div class="title">
+        <h1>Ethik-Quiz</h1>
+        <p>Teste dein Wissen zu Plessner, Löwith &amp; Marx im dunklen Atelier-Look.</p>
+      </div>
+      <div class="meta">
+        <button class="name-button" type="button" (click)="openNameModal()">
+          <span class="label">Spieler:in</span>
+          <span class="value">{{ playerName || 'Name festlegen' }}</span>
+        </button>
+        <div class="timer">
+          <span class="label">Zeit</span>
+          <span class="value">{{ timerDisplay }}</span>
+        </div>
+        <div class="progress">
+          <span class="label">Frage</span>
+          <span class="value">{{ progressLabel }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar" [attr.aria-hidden]="!sidebarOpen">
+    <nav>
+      <p class="heading">Quiz</p>
+      <a routerLink="/quiz" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Fragen</a>
+      <a routerLink="/quiz/leaderboard" routerLinkActive="active">Leaderboard</a>
+      <p class="coming-soon" *ngIf="metadata">{{ plannedMessage }}</p>
+      <ul class="placeholder-list" *ngIf="metadata?.placeholders?.length">
+        <li *ngFor="let placeholder of metadata?.placeholders">
+          {{ placeholder.label }} · bald verfügbar
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <section class="philosopher-strip">
+    <div
+      class="avatar"
+      *ngFor="let philosopher of philosopherStrip"
+      [style.--hue]="philosopher.hue"
+      [attr.aria-label]="philosopher.name"
+      role="img"
+    >
+      <span>{{ philosopher.name[0] }}</span>
+      <small>{{ philosopher.name }}</small>
+    </div>
+  </section>
+
+  <main class="quiz-content">
+    <section *ngIf="phase === 'loading'" class="state-card">
+      <div class="spinner"></div>
+      <p>Wir sammeln gerade die Fragen ...</p>
+    </section>
+
+    <section *ngIf="phase === 'intro'" class="state-card intro">
+      <h2>Bereit für das Ethik-Quiz?</h2>
+      <p>8 Fragen live, 7 folgen bald. Stelle sicher, dass dein Name gesetzt ist und starte, wenn du bereit bist.</p>
+      <div class="confirm-actions">
+        <button type="button" class="primary" (click)="startQuizFlow()">Jetzt starten</button>
+      </div>
+    </section>
+
+    <section *ngIf="phase === 'error'" class="state-card error">
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="primary" (click)="loadQuestions()">Erneut versuchen</button>
+    </section>
+
+    <ng-container *ngIf="phase === 'quiz' && currentQuestion as question">
+      <article class="quiz-card">
+        <header>
+          <span class="topic">{{ question.topic }}</span>
+          <div class="question-meta">
+            <span class="counter">Frage {{ currentIndex + 1 }} / {{ questions.length }}</span>
+            <span class="timer-badge">{{ timerDisplay }}</span>
+          </div>
+        </header>
+        <h2>{{ question.prompt }}</h2>
+        <p class="hint" *ngIf="question.multi">Wähle alle zutreffenden Antworten.</p>
+        <div class="choices">
+          <button
+            type="button"
+            class="choice"
+            *ngFor="let choice of question.choices"
+            [class.selected]="isSelected(question, choice.id)"
+            (click)="selectOption(question, choice.id)"
+            [attr.aria-pressed]="isSelected(question, choice.id)"
+          >
+            <div class="indicator" [class.multi]="question.multi">
+              <span></span>
+            </div>
+            <div class="text">
+              <span class="id">{{ choice.id }}.</span>
+              <span class="label">{{ choice.text }}</span>
+            </div>
+          </button>
+        </div>
+        <footer>
+          <div class="progress-info">
+            <span>{{ currentIndex + 1 }} / {{ questions.length }}</span>
+            <div class="bar">
+              <div class="fill" [style.width.%]="progressPercent"></div>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="ghost" (click)="goBack()" [disabled]="currentIndex === 0">Zurück</button>
+            <button type="button" class="primary" (click)="goNext()" [disabled]="!hasSelection">
+              {{ currentIndex === questions.length - 1 ? 'Weiter zur Bestätigung' : 'Weiter' }}
+            </button>
+          </div>
+        </footer>
+      </article>
+      <p class="validation" *ngIf="errorMessage && !prefersReducedMotion">{{ errorMessage }}</p>
+    </ng-container>
+
+    <section *ngIf="phase === 'confirm'" class="state-card confirm">
+      <h2>Geschafft! Möchtest du einreichen?</h2>
+      <p>Du hast alle Fragen beantwortet. Prüfe deine Auswahl oder reiche jetzt deine Antworten ein.</p>
+      <p class="validation" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <div class="confirm-actions">
+        <button type="button" class="ghost" (click)="goBack()">Noch einmal überprüfen</button>
+        <button type="button" class="primary" (click)="submitQuiz()">Fertig einreichen</button>
+      </div>
+    </section>
+
+    <section *ngIf="phase === 'submitted' && result" class="state-card success">
+      <h2>Auswertung</h2>
+      <p>Du hast {{ result.correct }}/{{ result.total }} richtig.</p>
+      <p>Zeit: {{ formatTimeMs(result.timeMs) }} · Dein Platz: {{ result.rank }}.</p>
+      <div class="leaderboard-preview" *ngIf="leaderboardPreview.length">
+        <h3>Top-Ergebnisse</h3>
+        <ul>
+          <li *ngFor="let entry of leaderboardPreview">
+            <span class="rank">#{{ entry.rank }}</span>
+            <span class="name">{{ entry.name }}</span>
+            <span class="score">{{ formatScore(entry) }}</span>
+            <span class="time">{{ formatTime(entry) }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="confirm-actions">
+        <a class="primary" routerLink="/quiz/leaderboard">Zum Leaderboard</a>
+        <button type="button" class="ghost" (click)="restartQuiz()">Nochmal starten</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" *ngIf="showNameModal">
+    <div class="modal">
+      <h2>Wie dürfen wir dich nennen?</h2>
+      <form [formGroup]="nameForm" (ngSubmit)="saveName()">
+        <label for="player-name">Name*</label>
+        <input
+          id="player-name"
+          type="text"
+          formControlName="name"
+          placeholder="z. B. Hannah"
+          maxlength="120"
+          required
+        />
+        <p class="error" *ngIf="nameForm.controls.name.invalid && nameForm.controls.name.touched">
+          Name fehlt.
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="ghost" (click)="dismissNameModal()">Abbrechen</button>
+          <button type="submit" class="primary">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #120a06;
+  color: #f8ede3;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+a {
+  color: inherit;
+}

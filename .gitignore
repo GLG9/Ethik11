@@ -15,6 +15,7 @@ db/sqlite/db.sqlite3
 .env
 .env.*
 *.log
+.venv*
 
 # System files
 .DS_Store

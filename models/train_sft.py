@@ -1,9 +1,23 @@
 import argparse
+import os
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer, SFTConfig
 import torch
+
+ALIAS_MAP = {
+    "deepseek-r1:7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1-7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+}
+
+
+def resolve_model_id(name: str) -> str:
+    override = os.environ.get("BASE_MODEL_HF")
+    if override:
+        return override
+    return ALIAS_MAP.get(name, name)
 
 def _to_str(x):
     if isinstance(x, str): return x
@@ -65,7 +79,7 @@ def formatting_func_any(sample, tok):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="Qwen/Qwen2.5-7B-Instruct")
+    ap.add_argument("--base", default=os.environ.get("BASE_MODEL", "deepseek-r1:7b"))
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--epochs", type=int, default=2)
@@ -73,7 +87,27 @@ def main():
     ap.add_argument("--qlora", action="store_true")
     args = ap.parse_args()
 
-    tok = AutoTokenizer.from_pretrained(args.base, use_fast=True, trust_remote_code=True)
+    base_alias = args.base
+    base_model_id = resolve_model_id(base_alias)
+    if base_model_id != base_alias:
+        print(f"INFO: Verwende Basismodell '{base_model_id}' für Alias '{base_alias}'.")
+
+    config = AutoConfig.from_pretrained(base_model_id, trust_remote_code=True)
+    quant_config = getattr(config, "quantization_config", None)
+    quant_method = None
+    if isinstance(quant_config, dict):
+        quant_method = quant_config.get("quant_method")
+    if getattr(config, "init_device", None) == "meta":
+        config.init_device = "cpu"
+
+    tok = AutoTokenizer.from_pretrained(base_model_id, use_fast=True, trust_remote_code=True)
+    tok.padding_side = "right"
+    if tok.pad_token is None and tok.eos_token is not None:
+        tok.pad_token = tok.eos_token
+
+    if args.qlora and (quant_method or "").lower() == "mxfp4":
+        print("INFO: MXFP4-Quantisierung erkannt – verwende natives MXFP4-Fine-Tuning (kein QLoRA).")
+        args.qlora = False
 
     if args.qlora:
         from transformers import BitsAndBytesConfig
@@ -81,18 +115,24 @@ def main():
             load_in_4bit=True,
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16,
+            bnb_4bit_compute_dtype=torch.float16,
         )
         model = AutoModelForCausalLM.from_pretrained(
-            args.base, quantization_config=qconf, device_map="auto", trust_remote_code=True
+            base_model_id,
+            config=config,
+            quantization_config=qconf,
+            device_map={"": 0} if torch.cuda.is_available() else None,
+            trust_remote_code=True,
+            low_cpu_mem_usage=True,
         )
         model = prepare_model_for_kbit_training(model)
     else:
         model = AutoModelForCausalLM.from_pretrained(
-            args.base,
+            base_model_id,
             dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto" if torch.cuda.is_available() else None,
+            device_map={"": 0} if torch.cuda.is_available() else None,
             trust_remote_code=True,
+            low_cpu_mem_usage=True,
         )
 
     peft_cfg = LoraConfig(

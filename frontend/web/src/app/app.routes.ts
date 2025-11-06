@@ -7,6 +7,7 @@ import { PlessnerComponent } from './pages/plessner/plessner.component';
 import { MarxComponent } from './pages/marx/marx.component';
 import { QuizComponent } from './pages/quiz/quiz.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { LeaderboardComponent } from './pages/quiz/leaderboard.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,10 @@ export const routes: Routes = [
   {
     path: 'quiz',
     component: QuizComponent,
+  },
+  {
+    path: 'quiz/leaderboard',
+    component: LeaderboardComponent,
   },
   {
     path: 'admin',
