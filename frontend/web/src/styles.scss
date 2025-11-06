@@ -22,6 +22,7 @@ html {
   background-color: var(--bg);
   color: var(--ink);
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 html.reduced-motion {
@@ -183,6 +184,8 @@ ul {
   padding: 1.5rem;
   flex: 1;
   overflow-y: auto;
+  display: grid;
+  gap: 1.75rem;
 }
 
 .menu-list {
@@ -191,12 +194,35 @@ ul {
   gap: 0.5rem;
 }
 
+.menu-list--slim {
+  gap: 0.35rem;
+}
+
 .menu-list li {
   border-bottom: 1px solid rgba(58, 47, 39, 0.35);
 }
 
 .menu-list li:last-child {
   border-bottom: none;
+}
+
+.menu-group {
+  display: grid;
+  gap: 0.45rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(58, 47, 39, 0.35);
+}
+
+.menu-section {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.menu-section__label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(233, 225, 214, 0.54);
 }
 
 .menu-link {
@@ -218,6 +244,35 @@ ul {
   font-size: 0.85rem;
 }
 
+.menu-list--slim .menu-link {
+  justify-content: flex-start;
+}
+
+.menu-link--primary {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menu-link--anchor {
+  justify-content: flex-start;
+  font-size: 0.95rem;
+}
+
+.menu-link--anchor::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  background: rgba(233, 225, 214, 0.3);
+}
+
+.is-active {
+  color: var(--accent) !important;
+}
+
 .menu-link:hover,
 .menu-link:focus-visible {
   color: var(--accent);
@@ -231,6 +286,8 @@ ul {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(58, 47, 39, 0.4);
+  display: grid;
+  gap: 1rem;
 }
 
 .menu-link--disabled {
@@ -360,34 +417,41 @@ ul {
   letter-spacing: -0.01em;
 }
 
-/* Titel direkt als vollbreiter, „gerader“ Kasten in hellbraun */
 .site-title--bleed {
   display: block;
-  background: var(--accent);      /* hellbraun */
-  color: var(--bg);               /* dunkler Text auf hellbraunem Grund */
+  color: var(--bg);
   padding: clamp(0.6rem, 1.4vw, 1rem) clamp(1rem, 3vw, 2rem);
-  border-radius: 0;               /* gerade Kanten */
-  box-shadow: none;
-
-  /* Full-bleed korrekt ab linker Kante */
-  width: 100vw;
+  border-radius: 0;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%); /* verhindert „Start ab der Hälfte“ */
-  margin: clamp(0.4rem, 1vw, 0.8rem) 0 0;
+  isolation: isolate; /* eigener Stacking-Context */
+  margin-top: clamp(0.4rem, 1vw, 0.8rem);
 }
-
-/* Optional: stabilere Breite auf mobilen Browsern mit dynamischen Viewports */
+.site-title--bleed::before {
+  content: "";
+  position: absolute;
+  z-index: -1;                  /* liegt hinter dem Text */
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);  /* zentriert am Viewport */
+  width: 100vw;                 /* volle Viewportbreite */
+  background: var(--accent);    /* hellbraun */
+  border-radius: 0;
+}
 @supports (width: 100dvw) {
-  .site-title--bleed { width: 100dvw; }
+  .site-title--bleed::before { width: 100dvw; }
 }
 
 .hero {
   width: 100%;
-  padding: clamp(0.4rem, 1vw, 0.8rem) clamp(0.5rem, 1.5vw, 1rem) clamp(0.8rem, 2.3vw, 1.5rem);
+  padding: clamp(0.4rem, 1vw, 0.8rem) 0 clamp(0.8rem, 2.3vw, 1.5rem);
   display: grid;
   gap: clamp(0.8rem, 1.6vw, 1.4rem);
   justify-items: stretch;
+}
+
+.ki-page {
+  padding: clamp(3rem, 6vw, 4rem) clamp(1.5rem, 6vw, 3.5rem) clamp(4rem, 7vw, 5rem);
 }
 
 
@@ -812,4 +876,31 @@ button:focus-visible {
     animation-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+.menu-progress {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.menu-progress__label {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(233, 225, 214, 0.65);
+}
+
+.menu-progress__bar {
+  position: relative;
+  height: 6px;
+  background: rgba(58, 47, 39, 0.6);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.menu-progress__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(137, 182, 105, 0.8), rgba(208, 179, 133, 0.9));
+  width: 0;
+  transition: width 0.45s var(--ease-out);
 }

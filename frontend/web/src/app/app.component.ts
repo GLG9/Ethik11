@@ -9,6 +9,9 @@ import {
   ViewChildren
 } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ProgressService, ProgressState } from './services/progress.service';
 
 declare global {
   interface Window {
@@ -78,7 +81,7 @@ function buildPortrait({
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -300,17 +303,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   ];
 
-  navItems = [
-    { id: 'intro', label: 'Einleitung' },
-    ...this.philosophers.map((philosopher) => ({
-      id: philosopher.id,
-      label: philosopher.name
-    })),
-    { id: 'vergleichen', label: 'Vergleichen' }
-  ];
+  kiNavigation = this.philosophers.map((philosopher) => ({
+    label: philosopher.name,
+    route: `/${philosopher.id}`
+  }));
 
   currentSection = 'intro';
   menuOpen = false;
+  showLanding = true;
+  visitedCount = 0;
+  readonly totalModels = 5;
+  private progressSub?: Subscription;
 
   @ViewChild('offcanvas') offcanvas?: ElementRef<HTMLElement>;
   @ViewChild('overlay') overlay?: ElementRef<HTMLElement>;
@@ -333,7 +336,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
-  constructor(private readonly renderer: Renderer2) {}
+  constructor(
+    private readonly renderer: Renderer2,
+    private readonly router: Router,
+    private readonly progressService: ProgressService
+  ) {
+    this.updateLandingState(this.router.url);
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.updateLandingState(event.urlAfterRedirects);
+      }
+    });
+    this.progressSub = this.progressService.progress$.subscribe((state) =>
+      this.updateVisitedCount(state)
+    );
+  }
 
   ngAfterViewInit(): void {
     if (!this.isBrowser) {
@@ -378,6 +395,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (this.animationRetryHandle) {
       window.clearTimeout(this.animationRetryHandle);
     }
+    this.progressSub?.unsubscribe();
   }
 
   toggleMenu(): void {
@@ -438,6 +456,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   onMenuLinkClick(event: Event, id: string): void {
     event.preventDefault();
+    if (this.router.url !== '/') {
+      this.closeMenu(false);
+      this.router.navigate(['/']).then(() => {
+        setTimeout(() => this.scrollToSection(id), 150);
+      });
+      return;
+    }
     this.scrollToSection(id);
   }
 
@@ -557,6 +582,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     window.requestAnimationFrame(() => {
       element.textContent = message;
     });
+  }
+
+  private updateLandingState(url: string): void {
+    if (!url) {
+      this.showLanding = true;
+      return;
+    }
+    const cleaned = url.split('?')[0].split('#')[0];
+    this.showLanding = cleaned === '/' || cleaned === '';
+  }
+
+  private updateVisitedCount(state: ProgressState): void {
+    const visited = Object.values(state).filter(Boolean).length;
+    this.visitedCount = visited;
   }
 
   private setupReducedMotionWatcher(): void {

@@ -1,0 +1,234 @@
+.ki-shell {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3.5rem);
+  background: rgba(36, 30, 26, 0.55);
+  border: 1px solid rgba(58, 47, 39, 0.7);
+  border-radius: clamp(1.4rem, 3vw, 2rem);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+}
+
+.ki-hero {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.ki-hero__titles {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ki-hero__eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: var(--muted);
+}
+
+.ki-hero__title {
+  font-family: "Merriweather", "Crimson Text", serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 0;
+}
+
+.ki-hero__lead {
+  font-family: "Crimson Text", serif;
+  font-size: clamp(1.1rem, 1.2rem + 0.4vw, 1.5rem);
+  color: var(--ink);
+  max-width: 56ch;
+}
+
+.ki-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ki-tags li {
+  padding: 0.45rem 0.95rem;
+  border: 1px solid rgba(233, 225, 214, 0.3);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(233, 225, 214, 0.05);
+}
+
+.ki-chat {
+  display: grid;
+  gap: 1.25rem;
+  background: rgba(20, 16, 14, 0.55);
+  border-radius: clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(58, 47, 39, 0.8);
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  backdrop-filter: blur(6px);
+}
+
+.ki-chat__thread {
+  max-height: clamp(340px, 45vh, 560px);
+  overflow-y: auto;
+  display: grid;
+  gap: 1.1rem;
+  padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(233, 225, 214, 0.35) transparent;
+}
+
+.ki-chat__thread::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ki-chat__thread::-webkit-scrollbar-thumb {
+  background: rgba(233, 225, 214, 0.25);
+  border-radius: 999px;
+}
+
+.ki-bubble {
+  display: grid;
+  gap: 0.5rem;
+  animation: chat-pop 0.6s var(--ease-out);
+}
+
+.ki-bubble__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ki-bubble__content {
+  margin: 0;
+  line-height: 1.6;
+  padding: 1.1rem 1.25rem;
+  border-radius: clamp(0.9rem, 2vw, 1.4rem);
+  border: 1px solid rgba(58, 47, 39, 0.5);
+  background: rgba(28, 23, 19, 0.85);
+  position: relative;
+}
+
+.ki-bubble--user .ki-bubble__content {
+  background: rgba(233, 225, 214, 0.14);
+  border-color: rgba(233, 225, 214, 0.3);
+}
+
+.ki-bubble--assistant .ki-bubble__content {
+  background: rgba(58, 47, 39, 0.55);
+  border-color: rgba(233, 225, 214, 0.22);
+}
+
+.ki-bubble--pending .ki-bubble__content {
+  opacity: 0.8;
+}
+
+.ki-bubble__spinner {
+  display: inline-flex;
+  margin-left: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid rgba(233, 225, 214, 0.35);
+  border-top-color: rgba(233, 225, 214, 0.75);
+  animation: spin 1s linear infinite;
+}
+
+.ki-bubble--error .ki-bubble__content {
+  border-color: rgba(208, 80, 80, 0.55);
+  background: rgba(60, 20, 20, 0.6);
+}
+
+.ki-chat__composer {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ki-chat__composer textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 88px;
+  border-radius: clamp(0.9rem, 2vw, 1.4rem);
+  border: 1px solid rgba(233, 225, 214, 0.18);
+  background: rgba(15, 12, 11, 0.8);
+  color: var(--ink);
+  font: inherit;
+  padding: 1rem 1.2rem;
+  line-height: 1.5;
+}
+
+.ki-chat__composer textarea:focus-visible {
+  outline: 2px solid rgba(233, 225, 214, 0.65);
+  outline-offset: 2px;
+}
+
+.ki-chat__composer textarea::placeholder {
+  color: rgba(233, 225, 214, 0.45);
+}
+
+.ki-chat__composer-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.composer-button {
+  padding: 0.65rem 1.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(233, 225, 214, 0.4);
+  background: linear-gradient(120deg, rgba(233, 225, 214, 0.25), rgba(208, 179, 133, 0.28));
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.composer-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.composer-button:not(:disabled):hover,
+.composer-button:not(:disabled):focus-visible {
+  background: linear-gradient(120deg, rgba(233, 225, 214, 0.35), rgba(208, 179, 133, 0.42));
+  transform: translateY(-2px);
+}
+
+.ki-chat__hint {
+  color: rgba(233, 225, 214, 0.45);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+@keyframes chat-pop {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .ki-shell {
+    padding: clamp(1.5rem, 6vw, 2.5rem) clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .ki-chat__thread {
+    max-height: clamp(300px, 55vh, 440px);
+  }
+}
