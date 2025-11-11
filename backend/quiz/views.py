@@ -120,11 +120,15 @@ class QuizViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'], url_path='questions')
     def questions(self, _: Request) -> Response:
+        if UPCOMING_COUNT > 0:
+            status_message = f'{PLANNED_TOTAL} geplant – {UPCOMING_COUNT} in Arbeit'
+        else:
+            status_message = f'Alle {LIVE_QUESTION_COUNT} Fragen live.'
         return Response(
             data={
                 'metadata': self.metadata,
                 'items': [serialize_question(q) for q in QUESTIONS],
-                'message': '15 geplant – 7 in Arbeit',
+                'message': status_message,
             },
             status=status.HTTP_200_OK,
         )

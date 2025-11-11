@@ -4,9 +4,9 @@
       <div class="title">
         <h1>Ethik-Quiz</h1>
         <p>Teste dein Wissen zu Plessner, Löwith &amp; Marx im dunklen Atelier-Look.</p>
-        <div class="planned-pill" *ngIf="metadata">
+        <div class="planned-pill" *ngIf="statusMessage">
           <span class="dot"></span>
-          <span>{{ plannedMessage }}</span>
+          <span>{{ statusMessage }}</span>
         </div>
       </div>
       <div class="meta">
@@ -21,9 +21,9 @@
       </div>
     </div>
     <div class="header-foot">
-      <div class="progress-rail" *ngIf="questions.length">
+      <div class="progress-rail" *ngIf="progressSteps.length">
         <span
-          *ngFor="let _ of questions; let i = index"
+          *ngFor="let step of progressSteps; let i = index"
           class="rail-dot"
           [class.completed]="i < currentIndex"
           [class.active]="i === currentIndex"
@@ -37,7 +37,7 @@
       <p class="heading">Quiz</p>
       <a routerLink="/quiz" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Fragen</a>
       <a routerLink="/quiz/leaderboard" routerLinkActive="active">Leaderboard</a>
-      <p class="coming-soon" *ngIf="metadata">{{ plannedMessage }}</p>
+      <p class="coming-soon" *ngIf="statusMessage">{{ statusMessage }}</p>
       <ul class="placeholder-list" *ngIf="metadata?.placeholders?.length">
         <li *ngFor="let placeholder of metadata?.placeholders">
           {{ placeholder.label }} · bald verfügbar
@@ -54,7 +54,7 @@
 
     <section *ngIf="phase === 'intro'" class="state-card intro glass-panel">
       <h2>Bereit für das Ethik-Quiz?</h2>
-      <p>8 Fragen live, 7 folgen bald. Stelle sicher, dass dein Name gesetzt ist und starte, wenn du bereit bist.</p>
+      <p>15 kuratierte Fragen live. Stelle sicher, dass dein Name gesetzt ist und starte, wenn du bereit bist.</p>
       <div class="confirm-actions">
         <button type="button" class="primary" (click)="startQuizFlow()">Jetzt starten</button>
       </div>
@@ -73,7 +73,7 @@
             {{ question.topic }}
           </div>
           <div class="question-meta">
-            <span class="counter">Frage {{ currentIndex + 1 }} / {{ questions.length }}</span>
+            <span class="counter">Frage {{ progressLabel }}</span>
           </div>
         </header>
         <div class="prompt-block">
@@ -100,7 +100,7 @@
         </div>
         <footer>
           <div class="progress-info">
-            <span class="count">{{ currentIndex + 1 }} / {{ questions.length }}</span>
+            <span class="count">{{ progressLabel }}</span>
             <div class="bar">
               <div class="fill" [style.width.%]="progressPercent"></div>
             </div>

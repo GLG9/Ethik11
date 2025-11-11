@@ -54,11 +54,11 @@ export class QuizComponent implements OnInit, OnDestroy {
   private mediaQuery?: MediaQueryList;
 
   philosopherStrip = [
+    { name: 'Marx', hue: 12 },
     { name: 'Plessner', hue: 18 },
     { name: 'Löwith', hue: 24 },
-    { name: 'Marx', hue: 12 },
-    { name: 'Kant', hue: 30 },
-    { name: 'Aristoteles', hue: 16 },
+    { name: 'Gehlen', hue: 32 },
+    { name: 'Kant', hue: 28 },
   ];
 
   ngOnInit(): void {
@@ -86,8 +86,20 @@ export class QuizComponent implements OnInit, OnDestroy {
     return this.questions[this.currentIndex];
   }
 
+  get totalQuestionCount(): number {
+    if (this.questions.length) {
+      return this.questions.length;
+    }
+    return this.metadata?.activeTotal ?? 0;
+  }
+
   get progressLabel(): string {
-    return `${this.currentIndex + 1}/${this.questions.length}`;
+    const total = this.totalQuestionCount;
+    if (!total) {
+      return '–';
+    }
+    const current = Math.min(this.currentIndex + 1, total);
+    return `${current}/${total}`;
   }
 
   get hasSelection(): boolean {
@@ -99,10 +111,12 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   get progressPercent(): number {
-    if (!this.questions.length) {
+    const total = this.totalQuestionCount;
+    if (!total) {
       return 0;
     }
-    return Math.round(((this.currentIndex + 1) / this.questions.length) * 100);
+    const current = Math.min(this.currentIndex + 1, total);
+    return Math.round((current / total) * 100);
   }
 
   get timerDisplay(): string {
@@ -112,11 +126,19 @@ export class QuizComponent implements OnInit, OnDestroy {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  get plannedMessage(): string {
+  get statusMessage(): string {
     if (!this.metadata) {
       return '';
     }
-    return `${this.metadata.plannedTotal} geplant – ${this.metadata.upcomingTotal} in Arbeit`;
+    if (this.metadata.upcomingTotal > 0) {
+      return `${this.metadata.plannedTotal} geplant – ${this.metadata.upcomingTotal} in Arbeit`;
+    }
+    return `${this.metadata.activeTotal} Fragen live`;
+  }
+
+  get progressSteps(): number[] {
+    const total = this.totalQuestionCount;
+    return total > 0 ? Array.from({ length: total }, (_, idx) => idx) : [];
   }
 
   openNameModal(): void {
@@ -302,11 +324,11 @@ export class QuizComponent implements OnInit, OnDestroy {
         this.metadata = response.metadata;
         this.questions = response.items;
         this.phase = 'intro';
-        if (this.playerName) {
-          this.beginQuiz();
-        } else {
-          this.showNameModal = true;
-        }
+      if (this.playerName) {
+        this.beginQuiz();
+      } else {
+        this.showNameModal = true;
+      }
       },
       error: () => {
         this.phase = 'error';

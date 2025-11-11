@@ -192,11 +192,13 @@
 .progress-rail {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.25rem;
 }
 
 .rail-dot {
-  flex: 1;
+  flex: 1 1 calc(100% / 10);
+  min-width: 18px;
   height: 4px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
