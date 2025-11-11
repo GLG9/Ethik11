@@ -63,6 +63,9 @@ export class LeaderboardComponent implements OnInit {
   }
 
   openReview(entry: QuizResultDto): void {
+    if (!entry.id) {
+      return;
+    }
     this.reviewVisible = true;
     this.reviewLoading = true;
     this.reviewError = '';

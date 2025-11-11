@@ -120,11 +120,14 @@ export class AdminComponent implements OnInit {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  trackByResult(_: number, entry: QuizResultDto): string {
-    return entry.id;
+  trackByResult(index: number, entry: QuizResultDto): string {
+    return entry.id ?? `entry-${index}`;
   }
 
   removeEntry(entry: QuizResultDto): void {
+    if (!entry.id) {
+      return;
+    }
     if (this.removingId) {
       return;
     }

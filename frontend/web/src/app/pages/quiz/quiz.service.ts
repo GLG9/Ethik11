@@ -35,12 +35,12 @@ export interface QuizSubmitPayload {
 }
 
 export interface QuizResultDto {
-  id: string;
+  id: string | null;
   name: string;
   correct: number;
   total: number;
   timeMs: number;
-  rank: number;
+  rank: number | null;
   createdAt: string;
 }
 
@@ -64,10 +64,18 @@ export interface QuizReviewResponse {
   questions: QuizReviewQuestion[];
 }
 
+export interface QuizSubmitStorage {
+  stored: boolean;
+  highlightId: string | null;
+  leaderboardRank: number | null;
+}
+
 export interface QuizSubmitResponse {
   metadata: QuizMetadata;
   result: QuizResultDto;
   leaderboard: QuizResultDto[];
+  storage: QuizSubmitStorage;
+  review: QuizReviewQuestion[];
 }
 
 export interface LeaderboardResponse {

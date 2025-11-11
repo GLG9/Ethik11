@@ -27,6 +27,10 @@ class QuizApiTests(TestCase):
         self.assertEqual(result['correct'], LIVE_QUESTION_COUNT)
         self.assertEqual(result['rank'], 1)
         self.assertEqual(result['timeMs'], 60000)
+        self.assertTrue(response.data['storage']['stored'])
+        self.assertEqual(response.data['storage']['highlightId'], result['id'])
+        self.assertIn('review', response.data)
+        self.assertEqual(len(response.data['review']), LIVE_QUESTION_COUNT)
         self.assertEqual(QuizResult.objects.count(), 1)
 
     def test_rank_orders_by_score_then_time_then_created(self) -> None:
@@ -48,6 +52,24 @@ class QuizApiTests(TestCase):
 
         leaderboard = self.client.get('/api/quiz/leaderboard/').data['entries']
         self.assertEqual([entry['name'] for entry in leaderboard[:3]], ['Chris', 'Anna', 'Ben'])
+
+    def test_second_attempt_not_saved_but_returns_result(self) -> None:
+        first_response = self.client.post('/api/quiz/submit/', self._full_score_payload('Ivy', 62000), format='json')
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(QuizResult.objects.count(), 1)
+        first_id = first_response.data['result']['id']
+
+        second_payload = self._full_score_payload('Ivy', 48000)
+        second_payload['answers']['q1'] = ['A']  # drop score to ensure different outcome
+        second_response = self.client.post('/api/quiz/submit/', second_payload, format='json')
+        self.assertEqual(second_response.status_code, 200, second_response.data)
+        self.assertFalse(second_response.data['storage']['stored'])
+        self.assertEqual(second_response.data['storage']['highlightId'], first_id)
+        self.assertIsNone(second_response.data['result']['id'])
+        self.assertIsNone(second_response.data['result']['rank'])
+        self.assertIn('review', second_response.data)
+        self.assertEqual(len(second_response.data['review']), LIVE_QUESTION_COUNT)
+        self.assertEqual(QuizResult.objects.count(), 1)
 
     def test_validation_errors(self) -> None:
         response = self.client.post('/api/quiz/submit/', {'name': '', 'timeMs': -5, 'answers': {}}, format='json')

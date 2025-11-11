@@ -129,7 +129,59 @@
     <section *ngIf="phase === 'submitted' && result" class="state-card success glass-panel">
       <h2>Auswertung</h2>
       <p>Du hast {{ result.correct }}/{{ result.total }} richtig.</p>
-      <p>Dein Platz: {{ result.rank }}.</p>
+      <p *ngIf="result.rank !== null; else storedRank">Dein Platz: {{ result.rank }}.</p>
+      <ng-template #storedRank>
+        <p *ngIf="storageInfo">
+          Leaderboard (erster Versuch): Platz {{ storageInfo.leaderboardRank ?? '–' }}.
+        </p>
+      </ng-template>
+      <p class="notice" *ngIf="storageInfo && !storageInfo.stored">
+        Nur dein erster Versuch landet im Leaderboard. Dieses Ergebnis wurde nicht gespeichert.
+      </p>
+      <section class="inline-review glass-panel" *ngIf="submittedReview.length && currentSubmittedQuestion as reviewQuestion">
+        <header>
+          <div>
+            <p class="eyebrow">Direkte Auswertung</p>
+            <h3>Frage {{ submittedReviewIndex + 1 }} / {{ submittedReview.length }}</h3>
+            <p class="meta">Thema: {{ reviewQuestion.topic }} <span *ngIf="reviewQuestion.multi">· Mehrfachauswahl</span></p>
+          </div>
+        </header>
+        <div class="prompt">
+          <p>{{ reviewQuestion.prompt }}</p>
+        </div>
+        <div class="review-choices">
+          <div
+            class="review-choice"
+            *ngFor="let choice of reviewQuestion.choices"
+            [class.correct]="choice.correct"
+            [class.incorrect]="choice.selected && !choice.correct"
+            [class.is-selected]="choice.selected"
+          >
+            <div class="choice-head">
+              <span class="choice-id">{{ choice.id }}</span>
+              <div class="badge-cluster">
+                <span class="badge success" *ngIf="choice.correct">Richtig</span>
+                <span class="badge danger" *ngIf="choice.selected && !choice.correct">Deine Auswahl</span>
+                <span class="badge neutral" *ngIf="choice.selected && choice.correct">Deine Auswahl</span>
+              </div>
+            </div>
+            <span class="choice-text">{{ choice.text }}</span>
+          </div>
+        </div>
+        <div class="review-nav">
+          <button type="button" class="ghost" (click)="prevSubmittedQuestion()" [disabled]="submittedReviewIndex === 0">
+            Zurück
+          </button>
+          <button
+            type="button"
+            class="ghost"
+            (click)="nextSubmittedQuestion()"
+            [disabled]="submittedReviewIndex === submittedReview.length - 1"
+          >
+            Weiter
+          </button>
+        </div>
+      </section>
       <div class="leaderboard-preview" *ngIf="leaderboardPreview.length">
         <h3>Top-Ergebnisse</h3>
         <ul>

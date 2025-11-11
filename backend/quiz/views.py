@@ -71,8 +71,7 @@ def build_rank_lookup() -> tuple[dict[UUID, int], list[QuizResult]]:
     return lookup, ordered
 
 
-def build_review_payload(result: QuizResult) -> list[dict[str, Any]]:
-    answers = result.answers or {}
+def build_review_payload_from_answers(answers: dict[str, list[str]]) -> list[dict[str, Any]]:
     review_questions: list[dict[str, Any]] = []
     for question in QUESTIONS:
         selections = set(answers.get(question.id, []))
@@ -95,6 +94,11 @@ def build_review_payload(result: QuizResult) -> list[dict[str, Any]]:
             }
         )
     return review_questions
+
+
+def build_review_payload(result: QuizResult) -> list[dict[str, Any]]:
+    answers = result.answers or {}
+    return build_review_payload_from_answers(answers)
 
 
 class QuizViewSet(viewsets.ViewSet):
@@ -188,26 +192,59 @@ class QuizViewSet(viewsets.ViewSet):
                 correct += 1
 
         with transaction.atomic():
-            result = QuizResult.objects.create(
-                name=name,
-                correct=correct,
-                total=LIVE_QUESTION_COUNT,
-                time_ms=time_ms,
-                answers=evaluated_answers,
+            existing_entry = (
+                QuizResult.objects.filter(name__iexact=name)
+                .order_by('created_at')
+                .first()
             )
+            stored = existing_entry is None
+            if stored:
+                leaderboard_entry = QuizResult.objects.create(
+                    name=name,
+                    correct=correct,
+                    total=LIVE_QUESTION_COUNT,
+                    time_ms=time_ms,
+                    answers=evaluated_answers,
+                )
+            else:
+                leaderboard_entry = existing_entry
 
         all_results = list(QuizResult.objects.order_by('-correct', 'time_ms', 'created_at'))
         rank_lookup = {res.uuid: index for index, res in enumerate(all_results, start=1)}
-        rank = rank_lookup[result.uuid]
+        leaderboard_rank = rank_lookup.get(leaderboard_entry.uuid)
+        if leaderboard_rank is None:
+            leaderboard_rank = max(len(all_results), 1)
+
+        result_payload = {
+            'id': str(leaderboard_entry.uuid) if stored else None,
+            'name': name,
+            'correct': correct,
+            'total': LIVE_QUESTION_COUNT,
+            'timeMs': time_ms,
+            'rank': leaderboard_rank if stored else None,
+            'createdAt': (
+                timezone.localtime(leaderboard_entry.created_at).isoformat()
+                if stored
+                else timezone.localtime(timezone.now()).isoformat()
+            ),
+        }
+        storage_payload = {
+            'stored': stored,
+            'highlightId': str(leaderboard_entry.uuid),
+            'leaderboardRank': leaderboard_rank,
+        }
+        review_payload = build_review_payload_from_answers(evaluated_answers)
 
         return Response(
             data={
                 'metadata': self.metadata,
-                'result': serialize_result(result, rank),
+                'result': result_payload,
                 'leaderboard': [
                     serialize_result(res, idx)
                     for idx, res in enumerate(all_results[:10], start=1)
                 ],
+                'storage': storage_payload,
+                'review': review_payload,
             },
             status=status.HTTP_200_OK,
         )

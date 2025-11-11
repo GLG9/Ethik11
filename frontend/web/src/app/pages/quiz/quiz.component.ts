@@ -7,7 +7,9 @@ import {
   QuizMetadata,
   QuizQuestionDto,
   QuizResultDto,
+  QuizReviewQuestion,
   QuizService,
+  QuizSubmitStorage,
 } from './quiz.service';
 
 type QuizPhase = 'loading' | 'intro' | 'quiz' | 'confirm' | 'submitted' | 'error';
@@ -43,7 +45,10 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   playerName = '';
   result: QuizResultDto | null = null;
+  storageInfo: QuizSubmitStorage | null = null;
   leaderboardPreview: QuizResultDto[] = [];
+  submittedReview: QuizReviewQuestion[] = [];
+  submittedReviewIndex = 0;
   errorMessage = '';
 
   private mediaQuery?: MediaQueryList;
@@ -208,22 +213,33 @@ export class QuizComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.result = response.result;
+          this.storageInfo = response.storage ?? null;
+          this.submittedReview = response.review ?? [];
+          this.submittedReviewIndex = 0;
           this.metadata = response.metadata;
           this.leaderboardPreview = response.leaderboard;
-          this.quizService.setLastResultId(response.result.id);
+          if (response.storage?.highlightId) {
+            this.quizService.setLastResultId(response.storage.highlightId);
+          }
           this.timerMs = response.result.timeMs;
           this.phase = 'submitted';
         },
         error: () => {
           this.phase = 'confirm';
           this.errorMessage = 'Das hat leider nicht geklappt. Bitte versuch es erneut.';
+          this.storageInfo = null;
+          this.submittedReview = [];
+          this.submittedReviewIndex = 0;
         },
       });
   }
 
   restartQuiz(): void {
     this.result = null;
+    this.storageInfo = null;
     this.leaderboardPreview = [];
+    this.submittedReview = [];
+    this.submittedReviewIndex = 0;
     this.timerMs = 0;
     this.currentIndex = 0;
     this.selections = {};
@@ -249,6 +265,33 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   isSelected(question: QuizQuestionDto, choiceId: string): boolean {
     return (this.selections[question.id] ?? []).includes(choiceId);
+  }
+
+  get currentSubmittedQuestion(): QuizReviewQuestion | null {
+    if (!this.submittedReview.length) {
+      return null;
+    }
+    return this.submittedReview[this.submittedReviewIndex] ?? null;
+  }
+
+  nextSubmittedQuestion(): void {
+    if (!this.submittedReview.length) {
+      return;
+    }
+    if (this.submittedReviewIndex >= this.submittedReview.length - 1) {
+      return;
+    }
+    this.submittedReviewIndex += 1;
+  }
+
+  prevSubmittedQuestion(): void {
+    if (!this.submittedReview.length) {
+      return;
+    }
+    if (this.submittedReviewIndex === 0) {
+      return;
+    }
+    this.submittedReviewIndex -= 1;
   }
 
   loadQuestions(): void {
