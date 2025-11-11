@@ -44,6 +44,26 @@ export interface QuizResultDto {
   createdAt: string;
 }
 
+export interface QuizReviewChoice {
+  id: string;
+  text: string;
+  selected: boolean;
+  correct: boolean;
+}
+
+export interface QuizReviewQuestion {
+  id: string;
+  topic: string;
+  prompt: string;
+  multi: boolean;
+  choices: QuizReviewChoice[];
+}
+
+export interface QuizReviewResponse {
+  result: QuizResultDto;
+  questions: QuizReviewQuestion[];
+}
+
 export interface QuizSubmitResponse {
   metadata: QuizMetadata;
   result: QuizResultDto;
@@ -79,6 +99,14 @@ export class QuizService {
 
   clearLeaderboard(): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/leaderboard/`);
+  }
+
+  getReview(id: string): Observable<QuizReviewResponse> {
+    return this.http.get<QuizReviewResponse>(`${this.baseUrl}/leaderboard/${id}/`);
+  }
+
+  deleteEntry(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/leaderboard/${id}/`);
   }
 
   getStoredName(): string | null {

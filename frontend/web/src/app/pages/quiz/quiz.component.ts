@@ -31,7 +31,6 @@ export class QuizComponent implements OnInit, OnDestroy {
   questions: QuizQuestionDto[] = [];
 
   phase: QuizPhase = 'loading';
-  sidebarOpen = true;
   showNameModal = false;
   prefersReducedMotion = false;
 
@@ -113,10 +112,6 @@ export class QuizComponent implements OnInit, OnDestroy {
       return '';
     }
     return `${this.metadata.plannedTotal} geplant – ${this.metadata.upcomingTotal} in Arbeit`;
-  }
-
-  toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
   }
 
   openNameModal(): void {

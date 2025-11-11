@@ -61,8 +61,20 @@ fi
 source "$BACKEND_DIR/.venv/bin/activate"
 
 if [[ -f "$BACKEND_DIR/requirements.txt" ]]; then
-  log "Installiere Backend-Abhängigkeiten..."
-  python -m pip install -r "$BACKEND_DIR/requirements.txt"
+  REQUIREMENTS_HASH="$(sha256sum "$BACKEND_DIR/requirements.txt" | awk '{print $1}')"
+  REQUIREMENTS_STAMP="$BACKEND_DIR/.venv/.requirements.sha256"
+  CURRENT_HASH=""
+  if [[ -f "$REQUIREMENTS_STAMP" ]]; then
+    CURRENT_HASH="$(<"$REQUIREMENTS_STAMP")"
+  fi
+  if [[ "$REQUIREMENTS_HASH" != "$CURRENT_HASH" ]]; then
+    log "Installiere/aktualisiere Backend-Abhängigkeiten..."
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade -r "$BACKEND_DIR/requirements.txt"
+    echo "$REQUIREMENTS_HASH" > "$REQUIREMENTS_STAMP"
+  else
+    log "Backend-Abhängigkeiten bereits aktuell."
+  fi
 else
   log "Hinweis: Kein backend/requirements.txt gefunden – überspringe Installation."
 fi

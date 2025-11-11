@@ -65,3 +65,28 @@ class QuizApiTests(TestCase):
         response_clear = self.client.delete('/api/quiz/leaderboard/')
         self.assertEqual(response_clear.status_code, 204)
         self.assertEqual(QuizResult.objects.count(), 0)
+
+    def test_delete_single_entry(self) -> None:
+        response = self.client.post('/api/quiz/submit/', self._full_score_payload('Fiona', 50000), format='json')
+        entry_id = response.data['result']['id']
+        self.assertEqual(QuizResult.objects.count(), 1)
+
+        delete_response = self.client.delete(f'/api/quiz/leaderboard/{entry_id}/')
+        self.assertEqual(delete_response.status_code, 204)
+        self.assertEqual(QuizResult.objects.count(), 0)
+
+        missing_response = self.client.delete(f'/api/quiz/leaderboard/{entry_id}/')
+        self.assertEqual(missing_response.status_code, 404)
+
+    def test_review_endpoint_returns_questions(self) -> None:
+        response = self.client.post('/api/quiz/submit/', self._full_score_payload('Gina', 55000), format='json')
+        entry_id = response.data['result']['id']
+
+        review = self.client.get(f'/api/quiz/leaderboard/{entry_id}/')
+        self.assertEqual(review.status_code, 200, review.data)
+        payload = review.data
+        self.assertIn('questions', payload)
+        self.assertEqual(len(payload['questions']), LIVE_QUESTION_COUNT)
+        first_question = payload['questions'][0]
+        self.assertIn('choices', first_question)
+        self.assertTrue(any(choice['correct'] for choice in first_question['choices']))

@@ -6,10 +6,13 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer, SFTConfig
 import torch
 
+DEFAULT_BASE_ALIAS = "deepseek-r1:7b"
 ALIAS_MAP = {
     "deepseek-r1:7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
     "deepseek-r1-7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
     "deepseek-r1": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1:14b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    "deepseek-r1-14b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
 }
 
 
@@ -49,6 +52,27 @@ def render_one(ex, tok):
         msgs = [{"role":"system","content":_to_str(ex["system"])}] + msgs
     return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=False)
 
+def _safe_prepare_model_for_kbit_training(model):
+    try:
+        return prepare_model_for_kbit_training(model)
+    except torch.cuda.OutOfMemoryError:
+        print("WARN: prepare_model_for_kbit_training lief in OOM – falle auf abgespeckte Vorbereitung zurück.")
+        torch.cuda.empty_cache()
+        for param in model.parameters():
+            param.requires_grad = False
+        for name, param in model.named_parameters():
+            lname = name.lower()
+            if ("norm" in lname or "ln_" in lname) and param.dtype in (torch.float16, torch.bfloat16):
+                param.data = param.data.to(torch.float32)
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
+        else:
+            def make_inputs_require_grad(module, _, output):
+                output.requires_grad_(True)
+            model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+        model.gradient_checkpointing_enable()
+        return model
+
 def formatting_func_any(sample, tok):
     """
     Muss IMMER list[str] liefern (TRL 0.9.6).
@@ -79,7 +103,7 @@ def formatting_func_any(sample, tok):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default=os.environ.get("BASE_MODEL", "deepseek-r1:7b"))
+    ap.add_argument("--base", default=os.environ.get("BASE_MODEL", DEFAULT_BASE_ALIAS))
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--epochs", type=int, default=2)
@@ -125,7 +149,7 @@ def main():
             trust_remote_code=True,
             low_cpu_mem_usage=True,
         )
-        model = prepare_model_for_kbit_training(model)
+        model = _safe_prepare_model_for_kbit_training(model)
     else:
         model = AutoModelForCausalLM.from_pretrained(
             base_model_id,

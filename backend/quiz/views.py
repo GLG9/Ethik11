@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Sequence
+from uuid import UUID
 
 from django.db import transaction
 from django.utils import timezone
@@ -62,6 +63,38 @@ def build_leaderboard(limit: int | None = None) -> list[dict[str, Any]]:
             break
         entries.append(serialize_result(result, index))
     return entries
+
+
+def build_rank_lookup() -> tuple[dict[UUID, int], list[QuizResult]]:
+    ordered = list(QuizResult.objects.order_by('-correct', 'time_ms', 'created_at'))
+    lookup = {result.uuid: index for index, result in enumerate(ordered, start=1)}
+    return lookup, ordered
+
+
+def build_review_payload(result: QuizResult) -> list[dict[str, Any]]:
+    answers = result.answers or {}
+    review_questions: list[dict[str, Any]] = []
+    for question in QUESTIONS:
+        selections = set(answers.get(question.id, []))
+        correct_ids = set(question.correct_ids)
+        review_questions.append(
+            {
+                'id': question.id,
+                'topic': question.topic,
+                'prompt': question.prompt,
+                'multi': question.multi,
+                'choices': [
+                    {
+                        'id': choice.id,
+                        'text': choice.text,
+                        'selected': choice.id in selections,
+                        'correct': choice.id in correct_ids,
+                    }
+                    for choice in question.choices
+                ],
+            }
+        )
+    return review_questions
 
 
 class QuizViewSet(viewsets.ViewSet):
@@ -199,4 +232,41 @@ class QuizViewSet(viewsets.ViewSet):
     @leaderboard.mapping.delete
     def clear_leaderboard(self, _: Request) -> Response:
         QuizResult.objects.all().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path=r'leaderboard/(?P<result_id>[0-9a-f-]{8}-[0-9a-f-]{4}-[0-9a-f-]{4}-[0-9a-f-]{4}-[0-9a-f-]{12})',
+    )
+    def leaderboard_entry(self, _: Request, result_id: str) -> Response:
+        try:
+            uuid_value = UUID(result_id)
+        except ValueError:
+            return Response({'detail': 'Ungültige ID.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            result = QuizResult.objects.get(uuid=uuid_value)
+        except QuizResult.DoesNotExist:
+            return Response({'detail': 'Eintrag nicht gefunden.'}, status=status.HTTP_404_NOT_FOUND)
+
+        rank_lookup, _ = build_rank_lookup()
+        rank = rank_lookup.get(result.uuid, 0) or 1
+
+        return Response(
+            data={
+                'result': serialize_result(result, rank),
+                'questions': build_review_payload(result),
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    @leaderboard_entry.mapping.delete
+    def delete_leaderboard_entry(self, _: Request, result_id: str) -> Response:
+        try:
+            uuid_value = UUID(result_id)
+        except ValueError:
+            return Response({'detail': 'Ungültige ID.'}, status=status.HTTP_400_BAD_REQUEST)
+        deleted, _ = QuizResult.objects.filter(uuid=uuid_value).delete()
+        if not deleted:
+            return Response({'detail': 'Eintrag nicht gefunden.'}, status=status.HTTP_404_NOT_FOUND)
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -14,7 +14,7 @@ Der Helfer richtet bei Bedarf `backend/.venv`, führt Migrationen aus, startet `
 
 ### vLLM/OpenAI-Endpunkt
 
-- `./start-dev.sh` startet zusätzlich das Skript `models/scripts/serve_vllm.sh`. Es nutzt die virtuelle Umgebung `models/.venv` (dort muss `vllm` installiert sein) und bindet den OpenAI-kompatiblen HTTP-Server auf `http://0.0.0.0:9000`. Das Skript akzeptiert das Alias `deepseek-r1:7b` und lädt intern `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` (überschreibbar via `BASE_MODEL_HF`).
+- `./start-dev.sh` startet zusätzlich das Skript `models/scripts/serve_vllm.sh`. Es nutzt die virtuelle Umgebung `models/.venv` (dort muss `vllm` installiert sein) und bindet den OpenAI-kompatiblen HTTP-Server auf `http://0.0.0.0:9000`. Standardmäßig wird jetzt das Alias `deepseek-r1:7b` genutzt, was intern zu `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` aufgelöst wird (überschreibbar via `BASE_MODEL_HF`). Das größere 14B-Modell bleibt optional verfügbar – sobald `deepseek-r1:14b` gewählt wird, setzt das Skript automatisch die strengeren Speicher-Limits (`GPU_MEMORY_UTILIZATION=0.93`, `MAX_MODEL_LEN=1792`, `SWAP_SPACE=16 GB`, `CPU_OFFLOAD_GB=16`, `--max-cpu-loras 1`, `VLLM_LORA_BACKEND=torch`), damit es weiterhin auf der 16‑GB-GPU funktioniert. Für das 7B-Default sind die Limits lockerer und lassen sich wie gewohnt per Umgebungsvariablen überschreiben. Quantisierung ist optional – per `models/scripts/quantize_awq.sh` erhältst du eine AWQ-Variante (`models/quantized/deepseek-r1-7b-awq`), die automatisch bevorzugt wird, sobald vorhanden.
 - Empfohlenes vLLM-Setup (separate Umgebung):
   ```bash
   python3 -m venv /root/ethik/.venv_vllm
@@ -51,7 +51,7 @@ Der Helfer richtet bei Bedarf `backend/.venv`, führt Migrationen aus, startet `
       ]
     }'
   ```
-- LoRA-Training (DeepSeek-R1 7B) läuft über eine dedizierte Umgebung:
+- LoRA-Training (DeepSeek-R1 Distill Qwen 7B) läuft über eine dedizierte Umgebung:
   ```bash
   python3 -m venv /root/ethik/.venv_r1
   source /root/ethik/.venv_r1/bin/activate

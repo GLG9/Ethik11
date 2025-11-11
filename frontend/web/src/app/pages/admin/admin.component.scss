@@ -1,21 +1,86 @@
 :host {
+  --bg: radial-gradient(circle at 20% 0%, #3b2417 0%, #1b0f09 40%, #0b0503 75%);
+  --surface: rgba(19, 10, 7, 0.92);
+  --surface-soft: rgba(30, 17, 11, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f8ede3;
+  --muted: rgba(248, 237, 227, 0.68);
+  --accent: #f4bb7f;
+  --accent-strong: #ffd7ad;
+  --danger: #ff8b8b;
+
   display: block;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #352218 0%, #120a06 55%);
-  color: #f8ede3;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  padding: 3rem clamp(1.5rem, 5vw, 4rem) 4rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  padding: clamp(2rem, 5vw, 4rem);
 }
 
 .admin-shell {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
 }
 
-header {
+.glass-panel {
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+}
+
+.login-card {
+  padding: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  gap: 2rem;
+}
+
+.login-copy .eyebrow,
+.admin-header .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.login-copy h1,
+.admin-header h1 {
+  margin: 0.35rem 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-card input {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+}
+
+.login-card input.invalid {
+  border-color: rgba(255, 0, 0, 0.45);
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.admin-header {
+  padding: clamp(1.5rem, 3vw, 2.4rem);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -23,28 +88,54 @@ header {
   flex-wrap: wrap;
 }
 
-header h1 {
-  margin: 0;
-  font-size: clamp(1.8rem, 2vw + 1rem, 2.5rem);
-}
-
-header p {
-  margin: 0.5rem 0 0;
-  color: rgba(248, 237, 227, 0.7);
-}
-
 .actions {
   display: flex;
-  gap: 0.75rem;
   flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.pill {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.state-card {
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  text-align: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.12);
+  border-top-color: var(--accent);
+  margin: 0 auto 1.5rem;
+  animation: spin 1s linear infinite;
 }
 
 .table-wrapper {
-  background: rgba(38, 25, 18, 0.85);
-  border-radius: 24px;
-  border: 1px solid rgba(252, 227, 205, 0.12);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.table-scroll {
+  overflow-x: auto;
 }
 
 table {
@@ -57,91 +148,70 @@ th,
 td {
   padding: 0.8rem 1rem;
   text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 th {
   text-transform: uppercase;
-  font-size: 0.75rem;
   letter-spacing: 0.18em;
-  color: rgba(248, 237, 227, 0.55);
-  border-bottom: 1px solid rgba(252, 227, 205, 0.12);
+  font-size: 0.7rem;
+  color: var(--muted);
 }
 
 tbody tr {
-  border-bottom: 1px solid rgba(252, 227, 205, 0.08);
   transition: background 180ms ease;
 }
 
 tbody tr:hover {
-  background: rgba(255, 226, 200, 0.08);
-}
-
-td {
-  color: rgba(248, 237, 227, 0.88);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .empty {
   text-align: center;
-  color: rgba(248, 237, 227, 0.6);
+  color: var(--muted);
 }
 
-.state-card {
-  background: rgba(38, 25, 18, 0.85);
-  border: 1px solid rgba(252, 227, 205, 0.15);
-  border-radius: 20px;
-  padding: 2.5rem;
-  text-align: center;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.3);
-}
-
-.state-card.error {
-  border-color: rgba(255, 105, 97, 0.3);
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 4px solid rgba(252, 227, 205, 0.25);
-  border-top-color: rgba(252, 217, 182, 0.9);
-  margin: 0 auto 1.5rem;
-  animation: spin 1s linear infinite;
+.primary,
+.ghost,
+.danger {
+  border-radius: 16px;
+  padding: 0.65rem 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
 .primary {
-  border-radius: 14px;
-  padding: 0.75rem 1.4rem;
-  border: none;
-  background: linear-gradient(135deg, #f3c28b, #d48b4c);
-  color: #24160f;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #311d11;
+  box-shadow: 0 15px 30px rgba(244, 187, 127, 0.35);
 }
 
 .ghost {
-  border-radius: 14px;
-  padding: 0.75rem 1.4rem;
-  border: 1px solid rgba(252, 227, 205, 0.35);
-  background: transparent;
-  color: inherit;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+
+.ghost.small {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
 }
 
 .danger {
-  border-radius: 14px;
-  padding: 0.75rem 1.4rem;
-  border: 1px solid rgba(255, 145, 130, 0.6);
-  background: rgba(122, 39, 29, 0.65);
-  color: #ffdcd3;
-  font-weight: 600;
-  cursor: pointer;
+  background: rgba(105, 29, 21, 0.85);
+  border-color: rgba(255, 130, 115, 0.6);
+  color: var(--danger);
 }
 
 .danger:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -151,17 +221,16 @@ td {
   }
 }
 
-@media (max-width: 640px) {
-  :host {
-    padding: 2.5rem 1.25rem 3rem;
+@media (max-width: 720px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  th,
-  td {
-    padding: 0.6rem 0.5rem;
-  }
-
-  header {
-    align-items: flex-start;
+  .ghost,
+  .danger,
+  .primary {
+    width: 100%;
+    text-align: center;
   }
 }

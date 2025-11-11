@@ -19,7 +19,7 @@ pip install -U "torch==2.4.0+cu121" --index-url https://download.pytorch.org/whl
 pip install -U transformers==4.42.4 accelerate==0.34.2 bitsandbytes==0.43.2 trl==0.9.6 datasets==2.19.2 peft==0.12.0
 ```
 
-> Hinweis: Die Skripte lösen `deepseek-r1:7b` automatisch auf das HuggingFace-Repository `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` auf. Bei Bedarf kannst du über `BASE_MODEL_HF` ein anderes Ziel setzen (z. B. lokalen Mirror).
+> Hinweis: Die Skripte lösen `deepseek-r1:7b` automatisch auf das HuggingFace-Repository `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` auf. Bei Bedarf kannst du über `BASE_MODEL_HF` ein anderes Ziel setzen (z. B. lokalen Mirror). Das größere Alias `deepseek-r1:14b` bleibt optional und weist weiterhin auf `deepseek-ai/DeepSeek-R1-Distill-Qwen-14B`; sobald es aktiv ist, zieht `serve_vllm.sh` automatisch strengere Speicherlimits (`CPU_OFFLOAD_GB=16`, `GPU_MEMORY_UTILIZATION=0.93`, `MAX_MODEL_LEN=1792`, `SWAP_SPACE=16 GB`, `--max-cpu-loras 1`, `VLLM_LORA_BACKEND=torch`). Per `python models/quantize_awq.py --base deepseek-ai/DeepSeek-R1-Distill-Qwen-7B --out models/quantized/deepseek-r1-7b-awq` (oder `models/scripts/quantize_awq.sh`) kannst du eine 4-Bit-AWQ-Version erzeugen und `BASE_MODEL_HF` entsprechend auf das lokale Verzeichnis zeigen lassen, um VRAM zu sparen.
 > Für das Serving mit `vllm` empfiehlt sich eine eigene Umgebung (`/root/ethik/.venv_vllm`) mit `torch==2.4.0+cu121` und `vllm==0.5.4` – `start-dev.sh` erkennt diese automatisch.
 
 Lege sicher, dass alle Trainingsdaten (z. B. `data/loewith.jsonl`) unter `models/data/` liegen und dass ein passendes Python-Umfeld mit allen Abhängigkeiten aktiv ist.

@@ -19,10 +19,13 @@ import anyio
 # -------------------------
 # Konfiguration
 # -------------------------
+DEFAULT_BASE_ALIAS = "deepseek-r1:7b"
 ALIAS_MAP = {
     "deepseek-r1:7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
     "deepseek-r1-7b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
     "deepseek-r1": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "deepseek-r1:14b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    "deepseek-r1-14b": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
 }
 
 
@@ -33,7 +36,7 @@ def resolve_model_id(name: str) -> str:
     return ALIAS_MAP.get(name, name)
 
 
-BASE_ALIAS = os.environ.get("BASE_MODEL", "deepseek-r1:7b")
+BASE_ALIAS = os.environ.get("BASE_MODEL", DEFAULT_BASE_ALIAS)
 BASE = resolve_model_id(BASE_ALIAS)
 if BASE != BASE_ALIAS:
     print(f"INFO: Lade Basismodell '{BASE}' für Alias '{BASE_ALIAS}'.")

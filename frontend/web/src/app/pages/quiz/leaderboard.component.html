@@ -29,6 +29,7 @@
           <th>Richtig</th>
           <th>Zeit</th>
           <th>Datum</th>
+          <th>Aktion</th>
         </tr>
       </thead>
       <tbody>
@@ -38,11 +39,90 @@
           <td>{{ formatScore(entry) }}</td>
           <td>{{ formatTime(entry) }}</td>
           <td>{{ entry.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+          <td>
+            <button
+              type="button"
+              class="ghost small"
+              *ngIf="entry.id === highlightId"
+              (click)="openReview(entry)"
+            >
+              Auswertung
+            </button>
+          </td>
         </tr>
         <tr *ngIf="!entries.length">
-          <td colspan="5" class="empty">Noch keine Einträge vorhanden.</td>
+          <td colspan="6" class="empty">Noch keine Einträge vorhanden.</td>
         </tr>
       </tbody>
     </table>
   </section>
+</div>
+
+<div class="review-overlay" *ngIf="reviewVisible">
+  <div class="review-modal glass-panel">
+    <button type="button" class="close-btn" aria-label="Auswertung schließen" (click)="closeReview()">×</button>
+
+    <div *ngIf="reviewLoading" class="review-state">
+      <div class="spinner"></div>
+      <p>Auswertung wird geladen …</p>
+    </div>
+
+    <div *ngIf="!reviewLoading">
+      <p class="error" *ngIf="reviewError">{{ reviewError }}</p>
+
+      <ng-container *ngIf="reviewData && reviewQuestion as question">
+        <header class="review-header">
+          <div>
+            <p class="eyebrow">{{ reviewData.result.name }}</p>
+            <h2>Frage {{ reviewIndex + 1 }} / {{ reviewData.questions.length }}</h2>
+            <p class="meta">
+              Thema: {{ question.topic }} · Ergebnis: {{ reviewData.result.correct }}/{{ reviewData.result.total }}
+            </p>
+          </div>
+          <div class="review-summary">
+            <span class="pill">Platz #{{ reviewData.result.rank }}</span>
+            <span class="pill">Zeit {{ formatTime(reviewData.result) }}</span>
+          </div>
+        </header>
+
+        <div class="review-body">
+          <p class="hint" *ngIf="question.multi">Mehrfachauswahl</p>
+          <h3>{{ question.prompt }}</h3>
+          <div class="review-choices">
+            <div
+              class="review-choice"
+              *ngFor="let choice of question.choices"
+              [class.correct]="choice.correct"
+              [class.incorrect]="choice.selected && !choice.correct"
+              [class.is-selected]="choice.selected"
+            >
+              <div class="choice-head">
+                <span class="choice-id">{{ choice.id }}</span>
+                <div class="badge-cluster">
+                  <span class="badge success" *ngIf="choice.correct">Richtig</span>
+                  <span class="badge danger" *ngIf="choice.selected && !choice.correct">Deine Auswahl</span>
+                  <span class="badge neutral" *ngIf="choice.selected && choice.correct">Deine Auswahl</span>
+                </div>
+              </div>
+              <span class="choice-text">{{ choice.text }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-nav">
+          <button type="button" class="ghost" (click)="prevReviewQuestion()" [disabled]="reviewIndex === 0">
+            Zurück
+          </button>
+          <button
+            type="button"
+            class="ghost"
+            (click)="nextReviewQuestion()"
+            [disabled]="!reviewData"
+          >
+            {{ isLastReviewQuestion ? 'Fertig' : 'Weiter' }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
 </div>

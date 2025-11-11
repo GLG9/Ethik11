@@ -2,7 +2,7 @@ import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { nanoid } from '../../utils/nanoid';
-import { ChatMessage, ChatService } from '../../services/chat.service';
+import { ChatMessage, ChatService, StreamEvent } from '../../services/chat.service';
 import { ProgressService } from '../../services/progress.service';
 
 interface UiMessage {
@@ -56,7 +56,7 @@ export class KiChatComponent implements AfterViewInit {
     this.systemMessage = { role: 'system', content: this.systemPrompt };
 
     this.pushAssistant(
-      `Ich bin ${this.displayName}. Stelle mir deine Fragen, und ich antworte mit Fokus auf ethische Perspektiven.`
+      `Ich bin ${this.displayName}. Stelle mir deine Fragen, und ich antworte mit klaren ethischen Perspektiven.`
     );
   }
 
@@ -105,12 +105,33 @@ export class KiChatComponent implements AfterViewInit {
       userChat
     ];
 
+    const handleStream = (event: StreamEvent) => {
+      if (event.type === 'delta') {
+        if (assistantMessage.pending) {
+          assistantMessage.pending = false;
+          assistantMessage.content = '';
+        }
+        assistantMessage.content += event.text;
+        this.scrollToBottom();
+      } else if (event.type === 'error') {
+        assistantMessage.pending = false;
+        assistantMessage.error = true;
+        assistantMessage.content = event.error;
+      }
+    };
+
     try {
-      const response = await this.chatService.converse(this.modelId, requestMessages);
-      assistantMessage.content = response.reply;
+      const reply = await this.chatService.converse(this.modelId, requestMessages, handleStream);
       assistantMessage.pending = false;
-      this.conversation.push(userChat, { role: 'assistant', content: assistantMessage.content });
-      this.progressService.markVisited(this.modelId);
+      if (!assistantMessage.error) {
+        if (!assistantMessage.content || assistantMessage.content === '…') {
+          assistantMessage.content = reply;
+        }
+        this.conversation.push(userChat, { role: 'assistant', content: assistantMessage.content });
+        this.progressService.markVisited(this.modelId);
+      } else {
+        this.conversation.push(userChat);
+      }
     } catch (error) {
       assistantMessage.content = 'Die Antwort konnte nicht geladen werden. Bitte versuche es später erneut.';
       assistantMessage.pending = false;

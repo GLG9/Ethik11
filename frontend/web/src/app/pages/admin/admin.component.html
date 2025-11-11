@@ -1,53 +1,97 @@
-<div class="admin-shell">
-  <header>
-    <div>
-      <h1>Admin · Quiz Leaderboard</h1>
-      <p>Einsehen und verwalten der aktuellen Einsendungen.</p>
+<div class="admin-shell" [class.locked]="!isUnlocked">
+  <section *ngIf="!isUnlocked" class="login-card glass-panel">
+    <div class="login-copy">
+      <p class="eyebrow">Admin Access</p>
+      <h1>Leaderboard verwalten</h1>
+      <p>Bitte gib das Admin-Passwort ein, um Einsendungen einzusehen und zu bearbeiten.</p>
     </div>
-    <div class="actions">
-      <a routerLink="/quiz" class="ghost">Zum Quiz</a>
-      <button type="button" class="ghost" (click)="load()">Aktualisieren</button>
-      <button type="button" class="danger" (click)="clearLeaderboard()" [disabled]="clearing">
-        {{ clearing ? 'Lösche…' : 'Leaderboard leeren' }}
-      </button>
-    </div>
-  </header>
-
-  <section *ngIf="isLoading" class="state-card">
-    <div class="spinner"></div>
-    <p>Lade Ergebnisse…</p>
+    <form [formGroup]="passwordForm" (ngSubmit)="unlock()">
+      <label for="admin-password">Passwort</label>
+      <input
+        id="admin-password"
+        type="password"
+        placeholder="********"
+        formControlName="password"
+        [class.invalid]="passwordForm.controls.password.invalid && passwordForm.controls.password.touched"
+      />
+      <p class="error" *ngIf="passwordForm.controls.password.invalid && passwordForm.controls.password.touched">
+        Passwort erforderlich.
+      </p>
+      <p class="error" *ngIf="authError">{{ authError }}</p>
+      <button type="submit" class="primary">Anmelden</button>
+    </form>
   </section>
 
-  <section *ngIf="!isLoading && errorMessage" class="state-card error">
-    <p>{{ errorMessage }}</p>
-    <button type="button" class="primary" (click)="load()">Erneut versuchen</button>
-  </section>
+  <ng-container *ngIf="isUnlocked">
+    <header class="glass-panel admin-header">
+      <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Quiz Leaderboard</h1>
+        <p>Überblick & Verwaltung aller Einsendungen.</p>
+      </div>
+      <div class="actions">
+        <span class="pill">{{ entries.length }} Einträge</span>
+        <a routerLink="/quiz" class="ghost">Zum Quiz</a>
+        <button type="button" class="ghost" (click)="load()">Aktualisieren</button>
+        <button type="button" class="danger" (click)="clearLeaderboard()" [disabled]="clearing">
+          {{ clearing ? 'Lösche…' : 'Leaderboard leeren' }}
+        </button>
+        <button type="button" class="ghost" (click)="logout()">Logout</button>
+      </div>
+    </header>
 
-  <section *ngIf="!isLoading && !errorMessage" class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>Platz</th>
-          <th>Name</th>
-          <th>Richtig</th>
-          <th>Zeit (mm:ss)</th>
-          <th>Zeit (ms)</th>
-          <th>Datum</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let entry of entries">
-          <td>#{{ entry.rank }}</td>
-          <td>{{ entry.name }}</td>
-          <td>{{ formatScore(entry) }}</td>
-          <td>{{ formatTime(entry) }}</td>
-          <td>{{ entry.timeMs | number }}</td>
-          <td>{{ entry.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
-        </tr>
-        <tr *ngIf="!entries.length">
-          <td colspan="6" class="empty">Keine Einträge vorhanden.</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
+    <section *ngIf="isLoading" class="state-card glass-panel">
+      <div class="spinner"></div>
+      <p>Lade Ergebnisse…</p>
+    </section>
+
+    <section *ngIf="!isLoading && errorMessage" class="state-card glass-panel error">
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="primary" (click)="load()">Erneut versuchen</button>
+    </section>
+
+    <section *ngIf="!isLoading && !errorMessage" class="table-wrapper glass-panel">
+      <div class="table-toolbar" *ngIf="entries.length">
+        <p>Einträge sortiert nach Score · Zeit</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Platz</th>
+              <th>Name</th>
+              <th>Richtig</th>
+              <th>Zeit (mm:ss)</th>
+              <th>Zeit (ms)</th>
+              <th>Datum</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of entries; trackBy: trackByResult">
+              <td>#{{ entry.rank }}</td>
+              <td>{{ entry.name }}</td>
+              <td>{{ formatScore(entry) }}</td>
+              <td>{{ formatTime(entry) }}</td>
+              <td>{{ entry.timeMs | number }}</td>
+              <td>{{ entry.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="ghost small"
+                  (click)="removeEntry(entry)"
+                  [disabled]="removingId === entry.id"
+                >
+                  {{ removingId === entry.id ? '…' : 'Entfernen' }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!entries.length">
+              <td colspan="7" class="empty">Keine Einträge vorhanden.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
 </div>

@@ -8,6 +8,7 @@ cd "${MODELS_DIR}"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export BASE_MODEL="${BASE_MODEL:-deepseek-r1:7b}"
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
+TRAIN_MAXLEN="${TRAIN_MAXLEN:-192}"
 
 DATASETS=(
   loewith
@@ -33,6 +34,6 @@ for dataset in "${DATASETS[@]}"; do
     continue
   fi
 
-  echo "Running: python train_sft.py --qlora --base ${BASE_MODEL} --data ${data_path} --out ${out_dir}"
-  python train_sft.py --qlora --base "${BASE_MODEL}" --data "${data_path}" --out "${out_dir}"
+  echo "Running: python train_sft.py --qlora --base ${BASE_MODEL} --data ${data_path} --out ${out_dir} --maxlen ${TRAIN_MAXLEN}"
+  python train_sft.py --qlora --base "${BASE_MODEL}" --data "${data_path}" --out "${out_dir}" --maxlen "${TRAIN_MAXLEN}"
 done

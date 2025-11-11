@@ -7,33 +7,27 @@ export interface ChatMessage {
   content: string;
 }
 
-interface ChatResponse {
-  reply: string;
-  raw?: unknown;
-}
-
-interface OpenAIChoice {
-  message?: {
-    role?: string;
-    content?: string;
-  };
-  delta?: {
-    content?: string;
-  };
-}
+export type StreamEvent =
+  | { type: 'delta'; text: string }
+  | { type: 'done' }
+  | { type: 'error'; error: string };
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private readonly baseUrl = 'http://0.0.0.0:9000/v1/chat/completions';
+  private readonly baseUrl = '/api/chat';
 
-  async converse(modelId: string, messages: ChatMessage[]): Promise<ChatResponse> {
+  async converse(
+    modelId: string,
+    messages: ChatMessage[],
+    onEvent?: (event: StreamEvent) => void
+  ): Promise<string> {
     const payload = {
-      model: modelId,
-      messages
+      messages,
+      temperature: 0.35
     };
-    const url = this.baseUrl;
+    const url = `${this.baseUrl}/${encodeURIComponent(modelId)}/`;
 
     try {
       const response = await fetch(url, {
@@ -48,22 +42,17 @@ export class ChatService {
         throw new Error(`Server antwortete mit Status ${response.status}`);
       }
 
-      const contentType = response.headers.get('content-type') ?? '';
-
-      if (contentType.includes('application/json')) {
-        const data = await response.json();
-        const reply = this.extractReply(data);
-        return { reply, raw: data };
-      }
-
-      const text = await response.text();
-      return { reply: text.trim() || '...', raw: text };
+      const data = await response.json();
+      const reply = this.extractReply(data);
+      onEvent?.({ type: 'delta', text: reply });
+      onEvent?.({ type: 'done' });
+      return reply;
     } catch (error) {
-      return {
-        reply:
-          'Ich kann gerade keine Verbindung zum KI-Modell aufbauen. Bitte versuche es in einem Moment erneut.',
-        raw: { error: (error as Error).message }
-      };
+      const fallback =
+        'Ich kann gerade keine Verbindung zum KI-Modell aufbauen. Bitte versuche es in einem Moment erneut.';
+      onEvent?.({ type: 'delta', text: fallback });
+      onEvent?.({ type: 'done' });
+      return fallback;
     }
   }
 
@@ -76,12 +65,12 @@ export class ChatService {
       return payload.reply;
     }
 
-    const choices = payload.choices as OpenAIChoice[] | undefined;
+    const choices = payload.choices as Array<{ message?: { content?: string }; delta?: { content?: string } }> | undefined;
     if (Array.isArray(choices) && choices.length > 0) {
       const first = choices[0];
       const content = first?.message?.content ?? first?.delta?.content;
-      if (content) {
-        return String(content).trim();
+      if (typeof content === 'string') {
+        return content.trim();
       }
     }
 

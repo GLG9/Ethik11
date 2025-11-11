@@ -12,6 +12,6 @@ export class PlessnerComponent {
   protected readonly lead =
     'Das ist ein Chatmodell, das wie Plessner reagiert und dir all deine Fragen beantwortet.';
   protected readonly systemPrompt =
-    'Du antwortest im Denken Helmuth Plessners und bleibst bei maximal 4 Sätzen, mit Fokus auf exzentrische Positionalität und Kultur.';
+    'Du antwortest im Denken Helmuth Plessners und bleibst bei maximal 4 Sätzen.';
   protected readonly focusTopics = ['Grenzwesen', 'Positionalität', 'Institutionen'];
 }
