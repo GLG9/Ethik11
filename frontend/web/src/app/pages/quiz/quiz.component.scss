@@ -723,6 +723,14 @@
     text-align: center;
   }
 
+  .quiz-shell.results-mode .quiz-header {
+    display: none;
+  }
+
+  .quiz-shell.results-mode .quiz-content {
+    padding-top: 0.5rem;
+  }
+
   .modal-backdrop {
     align-items: flex-start;
     padding-top: 4.5rem;

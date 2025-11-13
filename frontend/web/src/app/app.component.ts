@@ -6,7 +6,8 @@ import {
   QueryList,
   Renderer2,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  OnInit
 } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -85,7 +86,7 @@ function buildPortrait({
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements AfterViewInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   philosophers: Philosopher[] = [
     {
       id: 'plessner',
@@ -313,6 +314,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   showLanding = true;
   visitedCount = 0;
   readonly totalModels = 5;
+  compareColumnCount = 3;
+  compareSelections: string[] = [];
   private progressSub?: Subscription;
 
   @ViewChild('offcanvas') offcanvas?: ElementRef<HTMLElement>;
@@ -333,6 +336,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private pinTriggers: any[] = [];
   private mediaMatchContext: any;
   private animationRetryHandle?: number;
+  private compareMediaQuery?: MediaQueryList;
+  private compareMediaListener?: (event: MediaQueryListEvent) => void;
 
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
@@ -350,6 +355,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.progressSub = this.progressService.progress$.subscribe((state) =>
       this.updateVisitedCount(state)
     );
+  }
+
+  ngOnInit(): void {
+    this.initCompareSelections();
+    if (this.isBrowser) {
+      this.setupCompareColumnWatcher();
+    } else {
+      this.updateCompareColumnCount(3);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -391,6 +405,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
     if (this.reduceMotionQuery && this.reduceMotionListener) {
       this.reduceMotionQuery.removeEventListener('change', this.reduceMotionListener);
+    }
+    if (this.compareMediaQuery && this.compareMediaListener) {
+      this.compareMediaQuery.removeEventListener('change', this.compareMediaListener);
     }
     if (this.animationRetryHandle) {
       window.clearTimeout(this.animationRetryHandle);
@@ -613,6 +630,113 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }
     };
     this.reduceMotionQuery.addEventListener('change', this.reduceMotionListener);
+  }
+
+  private initCompareSelections(): void {
+    const defaults = ['marx', 'plessner', 'kant'];
+    this.compareSelections = defaults.filter((id) =>
+      this.philosophers.some((philosopher) => philosopher.id === id)
+    );
+    this.ensureCompareSelectionCount();
+  }
+
+  private setupCompareColumnWatcher(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    this.compareMediaQuery = window.matchMedia('(max-width: 900px)');
+    this.updateCompareColumnCount(this.compareMediaQuery.matches ? 2 : 3);
+    this.compareMediaListener = (event: MediaQueryListEvent) => {
+      this.updateCompareColumnCount(event.matches ? 2 : 3);
+    };
+    this.compareMediaQuery.addEventListener('change', this.compareMediaListener);
+  }
+
+  private updateCompareColumnCount(count: number): void {
+    if (this.compareColumnCount === count) {
+      return;
+    }
+    this.compareColumnCount = count;
+    this.ensureCompareSelectionCount();
+  }
+
+  private ensureCompareSelectionCount(): void {
+    const unique: string[] = [];
+    this.compareSelections.forEach((id) => {
+      if (id && !unique.includes(id)) {
+        unique.push(id);
+      }
+    });
+    this.compareSelections = unique.slice(0, this.compareColumnCount);
+    while (this.compareSelections.length < this.compareColumnCount) {
+      const next = this.findNextPhilosopherId(this.compareSelections);
+      this.compareSelections.push(next ?? '');
+    }
+  }
+
+  private findNextPhilosopherId(exclude: string[]): string | null {
+    const philosopher = this.philosophers.find((item) => !exclude.includes(item.id));
+    return philosopher ? philosopher.id : null;
+  }
+
+  get visibleCompareSelections(): string[] {
+    return this.compareSelections.slice(0, this.compareColumnCount);
+  }
+
+  getPhilosopherById(id: string | null | undefined): Philosopher | undefined {
+    if (!id) {
+      return undefined;
+    }
+    return this.philosophers.find((philosopher) => philosopher.id === id);
+  }
+
+  isOptionDisabled(id: string, slotIndex: number): boolean {
+    return this.compareSelections.some((selected, index) => index !== slotIndex && selected === id);
+  }
+
+  onCompareSelectionChange(slotIndex: number, philosopherId: string): void {
+    if (!philosopherId) {
+      return;
+    }
+    const duplicateIndex = this.compareSelections.findIndex(
+      (selected, index) => index !== slotIndex && selected === philosopherId
+    );
+    this.compareSelections[slotIndex] = philosopherId;
+    if (duplicateIndex >= 0) {
+      const fallback = this.findNextPhilosopherId(
+        this.compareSelections.filter((_, idx) => idx !== duplicateIndex)
+      );
+      this.compareSelections[duplicateIndex] = fallback ?? '';
+    }
+    this.ensureCompareSelectionCount();
+  }
+
+  trackCompareCard(index: number, selection: string): string {
+    return selection ? `${index}-${selection}` : `slot-${index}`;
+  }
+
+  getRowSharedValue(row: CompareRow): string | null {
+    const selections = this.visibleCompareSelections;
+    if (!selections.length) {
+      return null;
+    }
+    const baseValue = row.values[selections[0]];
+    if (!baseValue) {
+      return null;
+    }
+    const allEqual = selections.every((id) => row.values[id] === baseValue);
+    return allEqual ? baseValue : null;
+  }
+
+  getRowEntries(row: CompareRow): Array<{ id: string; name: string; value: string }> {
+    return this.visibleCompareSelections.map((id) => {
+      const philosopher = this.getPhilosopherById(id);
+      return {
+        id,
+        name: philosopher?.name ?? 'Unbekannt',
+        value: row.values[id] ?? '—'
+      };
+    });
   }
 
   private toggleReducedMotionClass(enable: boolean): void {

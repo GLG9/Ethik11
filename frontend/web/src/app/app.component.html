@@ -224,40 +224,72 @@
         </p>
       </header>
 
-      <div id="compare-cards" class="compare-cards" aria-live="polite">
-        <article class="compare-card" *ngFor="let philosopher of philosophers">
-          <h3>{{ philosopher.name }}</h3>
-          <dl>
-            <ng-container *ngFor="let row of compareRows">
-              <dt>{{ row.label }}</dt>
-              <dd>{{ row.values[philosopher.id] }}</dd>
-            </ng-container>
-          </dl>
+      <p class="compare-hint">
+        Wähle {{ compareColumnCount }} Philosoph:innen für den Direktvergleich.
+      </p>
+
+      <div
+        class="compare-columns"
+        [class.columns-2]="compareColumnCount === 2"
+        [class.columns-3]="compareColumnCount === 3"
+      >
+        <article
+          class="compare-column"
+          *ngFor="let selection of visibleCompareSelections; let i = index; trackBy: trackCompareCard"
+        >
+          <div class="compare-select">
+            <label class="compare-select__label" [attr.for]="'compare-select-' + i">
+              Perspektive {{ i + 1 }}
+            </label>
+            <div class="select-shell">
+              <select
+                class="compare-select__control"
+                [id]="'compare-select-' + i"
+                [value]="selection"
+                (change)="onCompareSelectionChange(i, $any($event.target).value)"
+              >
+                <option
+                  *ngFor="let philosopher of philosophers"
+                  [value]="philosopher.id"
+                  [disabled]="isOptionDisabled(philosopher.id, i)"
+                >
+                  {{ philosopher.name }}
+                </option>
+              </select>
+              <span class="select-caret" aria-hidden="true">⌄</span>
+            </div>
+          </div>
+          <ng-container *ngIf="getPhilosopherById(selection) as philosopher">
+            <div class="compare-meta">
+              <p class="compare-name">{{ philosopher.name }}</p>
+              <p class="compare-life">
+                {{ philosopher.life }}
+                <ng-container *ngIf="philosopher.epoch">· {{ philosopher.epoch }}</ng-container>
+              </p>
+              <p class="compare-summary">{{ philosopher.summary }}</p>
+              <p class="compare-highlight" *ngIf="philosopher.keyline">{{ philosopher.keyline }}</p>
+            </div>
+          </ng-container>
         </article>
       </div>
 
-      <div class="compare-table__wrap">
-        <table class="compare-table" aria-describedby="compare-caption">
-          <caption id="compare-caption" class="sr-only">
-            Vergleich der Menschenbilder von Plessner, Marx, Kant, Gehlen und Löwith.
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Kategorie</th>
-              <th *ngFor="let philosopher of philosophers" scope="col">
-                {{ philosopher.name }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of compareRows">
-              <th scope="row">{{ row.label }}</th>
-              <td *ngFor="let philosopher of philosophers">
-                {{ row.values[philosopher.id] }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="compare-specs" aria-live="polite">
+        <div class="spec-row" *ngFor="let row of compareRows">
+          <p class="spec-label">{{ row.label }}</p>
+          <ng-container *ngIf="getRowSharedValue(row) as shared; else contrastRow">
+            <div class="spec-shared">
+              <span>{{ shared }}</span>
+            </div>
+          </ng-container>
+          <ng-template #contrastRow>
+            <div class="spec-columns" [class.columns-2]="compareColumnCount === 2" [class.columns-3]="compareColumnCount === 3">
+              <div class="spec-entry" *ngFor="let entry of getRowEntries(row)">
+                <span class="entry-name">{{ entry.name }}</span>
+                <p>{{ entry.value }}</p>
+              </div>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </section>
   </main>

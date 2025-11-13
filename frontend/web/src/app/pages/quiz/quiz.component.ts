@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -38,10 +38,12 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   currentIndex = 0;
   selections: Record<string, string[]> = {};
+  @ViewChild('questionCard') questionCard?: ElementRef<HTMLElement>;
 
   timerMs = 0;
   private timerStartedAt = 0;
   private timerInterval?: ReturnType<typeof setInterval>;
+  private questionScrollTimer?: number;
 
   playerName = '';
   result: QuizResultDto | null = null;
@@ -52,6 +54,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   errorMessage = '';
 
   private mediaQuery?: MediaQueryList;
+  private readonly isBrowser = typeof window !== 'undefined';
 
   philosopherStrip = [
     { name: 'Marx', hue: 12 },
@@ -77,6 +80,7 @@ export class QuizComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.clearQuestionScrollTimer();
     if (this.mediaQuery) {
       this.mediaQuery.removeEventListener('change', this.onMotionPreferenceChange);
     }
@@ -189,6 +193,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     if (this.currentIndex < this.questions.length - 1) {
       this.currentIndex += 1;
+      this.scheduleQuestionScroll();
       return;
     }
     this.phase = 'confirm';
@@ -198,6 +203,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     if (this.phase === 'confirm') {
       this.phase = 'quiz';
       this.errorMessage = '';
+      this.scheduleQuestionScroll();
       return;
     }
     if (this.currentIndex === 0) {
@@ -205,6 +211,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     }
     this.currentIndex -= 1;
     this.errorMessage = '';
+    this.scheduleQuestionScroll();
   }
 
   submitQuiz(): void {
@@ -245,6 +252,7 @@ export class QuizComponent implements OnInit, OnDestroy {
           }
           this.timerMs = response.result.timeMs;
           this.phase = 'submitted';
+          this.clearQuestionScrollTimer();
         },
         error: () => {
           this.phase = 'confirm';
@@ -268,6 +276,7 @@ export class QuizComponent implements OnInit, OnDestroy {
     this.phase = 'quiz';
     this.errorMessage = '';
     this.startTimer();
+    this.scheduleQuestionScroll();
   }
 
   formatScore(entry: QuizResultDto): string {
@@ -383,4 +392,67 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly onMotionPreferenceChange = (event: MediaQueryListEvent) => {
     this.prefersReducedMotion = event.matches;
   };
+
+  private scheduleQuestionScroll(): void {
+    if (!this.shouldAutoScroll()) {
+      return;
+    }
+    this.clearQuestionScrollTimer();
+    this.questionScrollTimer = window.setTimeout(() => {
+      this.questionScrollTimer = undefined;
+      this.scrollQuestionIntoView();
+    }, 120);
+  }
+
+  private clearQuestionScrollTimer(): void {
+    if (this.questionScrollTimer) {
+      window.clearTimeout(this.questionScrollTimer);
+      this.questionScrollTimer = undefined;
+    }
+  }
+
+  private scrollQuestionIntoView(): void {
+    if (!this.shouldAutoScroll()) {
+      return;
+    }
+    if (this.phase !== 'quiz') {
+      return;
+    }
+    const target = this.questionCard?.nativeElement;
+    if (!target) {
+      return;
+    }
+    const behavior: ScrollBehavior = this.prefersReducedMotion ? 'auto' : 'smooth';
+    const offset = this.getStickyHeaderOffset() + 200;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+    const top = Math.max(targetTop - offset - 12, 0);
+    window.scrollTo({ top, behavior });
+  }
+
+  private shouldAutoScroll(): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
+    if (this.prefersReducedMotion) {
+      return false;
+    }
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  private getStickyHeaderOffset(): number {
+    if (!this.isBrowser) {
+      return 0;
+    }
+    const rootStyle = window.getComputedStyle(document.documentElement);
+    const cssVar = rootStyle.getPropertyValue('--header-height').trim();
+    const parsed = cssVar ? parseFloat(cssVar.replace('px', '')) : NaN;
+    if (!Number.isNaN(parsed) && parsed > 0) {
+      return parsed;
+    }
+    const header = document.getElementById('site-header');
+    if (header) {
+      return header.getBoundingClientRect().height;
+    }
+    return 72;
+  }
 }
