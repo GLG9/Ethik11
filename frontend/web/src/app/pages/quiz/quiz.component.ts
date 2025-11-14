@@ -57,7 +57,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   private readonly isBrowser = typeof window !== 'undefined';
 
   philosopherStrip = [
-    { name: 'Marx', hue: 12 },
+    { name: 'Karl Marx', hue: 12 },
     { name: 'Plessner', hue: 18 },
     { name: 'Löwith', hue: 24 },
     { name: 'Gehlen', hue: 32 },

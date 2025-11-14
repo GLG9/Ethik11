@@ -99,6 +99,19 @@
         </button>
       </ng-template>
     </div>
+
+    <div class="menu-news">
+      <a
+        class="menu-link menu-link--news"
+        routerLink="/news"
+        routerLinkActive="is-active"
+        (click)="closeMenu(false)"
+        [attr.tabindex]="menuOpen ? null : '-1'"
+      >
+        <span class="menu-link__icon" aria-hidden="true">🗞</span>
+        <span>News</span>
+      </a>
+    </div>
   </nav>
 </aside>
 

@@ -10,7 +10,7 @@ import { KiChatComponent } from '../../shared/ki-chat/ki-chat.component';
 })
 export class MarxComponent {
   protected readonly lead =
-    'Das ist ein Chatmodell, das wie Marx reagiert und dir all deine Fragen beantwortet.';
+    'Das ist ein Chatmodell, das wie Karl Marx reagiert und dir all deine Fragen beantwortet.';
   protected readonly systemPrompt =
     'Du antwortest im Denken Karl Marx, analysierst materialistisch und bleibst stets bei maximal 4 Sätzen.';
   protected readonly focusTopics = ['Entfremdung', 'Klassenanalyse', 'Materialismus'];

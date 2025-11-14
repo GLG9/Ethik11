@@ -126,7 +126,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       life: '1818-1883',
       epoch: 'Kritische Theorie, Industrialisierung',
       summary:
-        'Marx analysiert den Menschen als produktives Gattungswesen, das sich durch gesellschaftliche Arbeit entfaltet und entfremdet werden kann.',
+        'Karl Marx analysiert den Menschen als produktives Gattungswesen, das sich durch gesellschaftliche Arbeit entfaltet und entfremdet werden kann.',
       keyline: 'Emanzipation entsteht in der Veränderung materieller Verhältnisse.',
       portrait: {
         thumb: buildPortrait({
@@ -151,7 +151,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       quote:
         'Die Philosophen haben die Welt nur verschieden interpretiert; es kommt drauf an, sie zu verändern.',
-      quoteSource: 'Marx, Thesen über Feuerbach (1845)'
+      quoteSource: 'Karl Marx, Thesen über Feuerbach (1845)'
     },
     {
       id: 'kant',

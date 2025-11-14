@@ -1,0 +1,107 @@
+<section class="news-page">
+  <section class="breaking breaking--top" aria-label="Eilmeldungen">
+    <span class="ticker-label">Breaking</span>
+    <div class="ticker-marquee">
+      <ul class="ticker-track">
+        <li *ngFor="let headline of tickerHeadlines">{{ headline }}</li>
+        <li *ngFor="let headline of tickerHeadlines" aria-hidden="true">{{ headline }}</li>
+      </ul>
+    </div>
+  </section>
+
+  <header class="news-page__header">
+    <p class="news-page__eyebrow">Magazin</p>
+    <h2>{{ pageTitle }}</h2>
+    <p class="news-page__subtitle">{{ pageSubtitle }}</p>
+  </header>
+
+  <section class="news-hero" *ngIf="heroArticle as hero">
+    <article class="news-hero__main">
+      <a class="news-hero__media" [routerLink]="['/news', hero.id]">
+        <img [src]="hero.image.src" [alt]="hero.image.alt" loading="lazy" decoding="async" />
+      </a>
+      <div class="news-hero__content">
+        <p class="news-kicker">{{ hero.kicker }}</p>
+        <h1>{{ hero.title }}</h1>
+        <p class="news-hero__lead">{{ hero.heroLead || hero.teaser }}</p>
+        <p class="news-hero__teaser">
+          {{ hero.body[2] || hero.teaser }}
+        </p>
+        <div class="news-hero__actions">
+          <a class="pill-link" [routerLink]="['/news', hero.id]">Zur Top-Story</a>
+          <a
+            *ngIf="hero.sourceUrl"
+            class="ghost-link"
+            [href]="hero.sourceUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            Zur Quelle
+          </a>
+        </div>
+      </div>
+    </article>
+    <div class="news-hero__teasers" *ngIf="heroTeasers.length">
+      <article class="hero-teaser" *ngFor="let teaser of heroTeasers">
+        <a class="hero-teaser__media" [routerLink]="['/news', teaser.id]">
+          <img [src]="teaser.image.src" [alt]="teaser.image.alt" loading="lazy" decoding="async" />
+        </a>
+        <div class="hero-teaser__content">
+          <p class="news-kicker">{{ teaser.kicker }}</p>
+          <h2>{{ teaser.title }}</h2>
+          <p>{{ teaser.teaser }}</p>
+          <a [routerLink]="['/news', teaser.id]">Mehr erfahren</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="aktuelles">
+    <div class="aktuelles__header">
+      <h2>Aktuelles</h2>
+      <p>Ein kuratierter Blick auf Gegenwartsmeldungen zu philosophischen Menschenbildern.</p>
+    </div>
+    <div class="aktuelles__layout">
+      <div class="aktuelles__grid">
+        <article *ngFor="let article of articles" class="news-card">
+          <a class="news-card__media" [routerLink]="['/news', article.id]">
+            <img [src]="article.image.src" [alt]="article.image.alt" loading="lazy" decoding="async" />
+          </a>
+          <div class="news-card__body">
+            <p class="news-kicker">{{ article.kicker }}</p>
+            <h3>{{ article.title }}</h3>
+            <p class="news-card__teaser">{{ article.teaser }}</p>
+            <div class="news-card__actions">
+              <a class="pill-link pill-link--ghost" [routerLink]="['/news', article.id]">Zum Artikel</a>
+              <a
+                *ngIf="article.sourceUrl"
+                class="ghost-link"
+                [href]="article.sourceUrl"
+                target="_blank"
+                rel="noopener"
+              >
+                Quelle öffnen
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="meistgelesen" aria-label="Meistgelesene Artikel">
+        <h3>Meistgelesen</h3>
+        <ul>
+          <li *ngFor="let entry of meistgelesen; let index = index">
+            <a [routerLink]="['/news', entry.article.id]">
+              <span class="rank">#{{ index + 1 }}</span>
+              <img [src]="entry.article.image.src" [alt]="entry.article.image.alt" loading="lazy" decoding="async" />
+              <span class="meta">
+                <small>{{ entry.article.kicker }}</small>
+                <strong>{{ entry.article.title }}</strong>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</section>

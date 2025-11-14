@@ -1,0 +1,68 @@
+<section class="news-detail" *ngIf="article as item; else missing">
+  <section class="breaking breaking--top" aria-label="Eilmeldungen">
+    <span class="ticker-label">Breaking</span>
+    <div class="ticker-marquee">
+      <ul class="ticker-track">
+        <li *ngFor="let headline of tickerHeadlines">{{ headline }}</li>
+        <li *ngFor="let headline of tickerHeadlines" aria-hidden="true">{{ headline }}</li>
+      </ul>
+    </div>
+  </section>
+
+  <nav class="detail-nav">
+    <a routerLink="/news" class="back-link">← Zurück zur Übersicht</a>
+  </nav>
+
+  <header class="detail-header">
+    <p class="news-kicker">{{ item.kicker }}</p>
+    <h1>{{ item.title }}</h1>
+    <p class="detail-lead">{{ item.heroLead || item.teaser }}</p>
+  </header>
+
+  <figure class="detail-figure">
+    <img [src]="item.image.src" [alt]="item.image.alt" loading="lazy" decoding="async" />
+  </figure>
+
+  <article class="detail-body">
+    <p *ngFor="let paragraph of item.body">{{ paragraph }}</p>
+    <div class="detail-actions">
+      <a class="pill-link" routerLink="/news">Weitere Meldungen</a>
+      <a
+        *ngIf="item.sourceUrl"
+        class="ghost-link"
+        [href]="item.sourceUrl"
+        target="_blank"
+        rel="noopener"
+      >
+        Originalquelle öffnen
+      </a>
+    </div>
+  </article>
+
+  <section class="detail-related" *ngIf="relatedArticles.length">
+    <div class="detail-related__header">
+      <h2>Weitere News</h2>
+      <p>Mehr Perspektiven aus unserem Dossier.</p>
+    </div>
+    <div class="related-grid">
+      <article *ngFor="let related of relatedArticles" class="related-card">
+        <a class="related-card__media" [routerLink]="['/news', related.id]">
+          <img [src]="related.image.src" [alt]="related.image.alt" loading="lazy" decoding="async" />
+        </a>
+        <div class="related-card__body">
+          <p class="news-kicker">{{ related.kicker }}</p>
+          <h3>{{ related.title }}</h3>
+          <p>{{ related.teaser }}</p>
+          <a [routerLink]="['/news', related.id]">Zum Artikel</a>
+        </div>
+      </article>
+    </div>
+  </section>
+</section>
+
+<ng-template #missing>
+  <section class="news-detail">
+    <p>Dieser Artikel wurde nicht gefunden.</p>
+    <a routerLink="/news" class="pill-link">Zurück zur Übersicht</a>
+  </section>
+</ng-template>

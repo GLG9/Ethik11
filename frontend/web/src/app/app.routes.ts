@@ -8,6 +8,8 @@ import { MarxComponent } from './pages/marx/marx.component';
 import { QuizComponent } from './pages/quiz/quiz.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { LeaderboardComponent } from './pages/quiz/leaderboard.component';
+import { NewsComponent } from './pages/news/news.component';
+import { NewsDetailComponent } from './pages/news/news-detail.component';
 
 export const routes: Routes = [
   {
@@ -45,5 +47,13 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+  },
+  {
+    path: 'news',
+    component: NewsComponent,
+  },
+  {
+    path: 'news/:id',
+    component: NewsDetailComponent,
   },
 ];
