@@ -49,4 +49,9 @@ export class NewsComponent {
     },
     []
   );
+
+  readonly showDisclaimer =
+    !!this.heroArticle?.sourceUrl === false ||
+    this.heroTeasers.some((article) => !article.sourceUrl) ||
+    this.articles.some((article) => !article.sourceUrl);
 }

@@ -10,6 +10,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { LeaderboardComponent } from './pages/quiz/leaderboard.component';
 import { NewsComponent } from './pages/news/news.component';
 import { NewsDetailComponent } from './pages/news/news-detail.component';
+import { ImpressumComponent } from './pages/impressum/impressum.component';
 
 export const routes: Routes = [
   {
@@ -55,5 +56,9 @@ export const routes: Routes = [
   {
     path: 'news/:id',
     component: NewsDetailComponent,
+  },
+  {
+    path: 'impressum',
+    component: ImpressumComponent,
   },
 ];

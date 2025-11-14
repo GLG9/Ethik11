@@ -192,6 +192,17 @@
   font-weight: 600;
 }
 
+.news-disclaimer {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 195, 101, 0.45);
+  background: rgba(255, 195, 101, 0.08);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ticker-track,
   .related-card {

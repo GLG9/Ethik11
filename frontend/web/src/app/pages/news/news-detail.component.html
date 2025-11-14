@@ -16,7 +16,6 @@
   <header class="detail-header">
     <p class="news-kicker">{{ item.kicker }}</p>
     <h1>{{ item.title }}</h1>
-    <p class="detail-lead">{{ item.heroLead || item.teaser }}</p>
   </header>
 
   <figure class="detail-figure">
@@ -37,6 +36,10 @@
         Originalquelle öffnen
       </a>
     </div>
+    <p class="news-disclaimer" *ngIf="!item.sourceUrl">
+      ⚠️ Dieses Beispiel ist fiktiv und dient allein dazu, das Menschenbild zu illustrieren,
+      da keine externe Quelle vorliegt.
+    </p>
   </article>
 
   <section class="detail-related" *ngIf="relatedArticles.length">

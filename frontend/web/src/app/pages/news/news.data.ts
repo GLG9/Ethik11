@@ -210,6 +210,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Die Debatte um den Corona-Impfstoff in der Pandemie 2020 -2023 – Welcher Impfstoff ist der beste?',
     body: [
       'Die Debatte um den Corona-Impfstoff in der Pandemie 2020 -2023 – Welcher Impfstoff ist der beste? Welcher Impfstoff ist am schnellsten auf dem Markt?',
+      'Dieses Beispiel spiegelt den „ungeselligen Gesellen“ nach Kant sehr gut wider.',
       'Diese Fragen stellten sich viele Menschen, da selbst große Ungewissheit herrschte, welche Auswirkungen eine Impfung haben könnte und auch Gerüchte über negative Folgen bestimmter Impfstoffe präsent waren.',
       'Zum einen ist der Mensch bzw. der Arbeiter der Impfstoff-Hersteller ungesellig, denn jede Firma war darauf bedacht, den besten Impfstoff herzustellen, um Anerkennung zu bekommen.',
       'Sie waren jedoch gleichzeitig gesellig, da die Firmen gezwungen waren, kooperativ Forschungsergebnisse auszutauschen, um das gemeinsame Ziel, die Überwindung der Pandemie zu erreichen.',

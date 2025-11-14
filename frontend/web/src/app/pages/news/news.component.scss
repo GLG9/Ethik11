@@ -366,6 +366,17 @@
   font-size: 0.95rem;
 }
 
+.news-disclaimer {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 195, 101, 0.4);
+  background: rgba(255, 195, 101, 0.08);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 1023px) {
   .meistgelesen {
     display: none;

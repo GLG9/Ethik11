@@ -900,6 +900,16 @@ main {
   border-top: 1px solid rgba(58, 47, 39, 0.45);
 }
 
+.site-footer a {
+  color: var(--accent);
+  margin-left: 0.35rem;
+}
+
+.footer-separator {
+  margin: 0 0.5rem;
+  color: rgba(233, 225, 214, 0.4);
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);

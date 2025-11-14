@@ -1,0 +1,27 @@
+<section class="impressum-page">
+  <header class="impressum-hero">
+    <p class="eyebrow">Impressum & Quellen</p>
+    <h1>Transparenz für Seminare & Projekte</h1>
+    <p class="intro">{{ intro }}</p>
+  </header>
+
+  <div class="impressum-grid">
+    <article class="impressum-section" *ngFor="let section of sections">
+      <h2>{{ section.title }}</h2>
+      <ul>
+        <li *ngFor="let link of section.links">
+          <span *ngIf="link.label" class="link-label">{{ link.label }}</span>
+          <a [href]="link.url" target="_blank" rel="noopener">
+            {{ link.url }}
+            <span aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </article>
+  </div>
+
+  <p class="impressum-note">
+    ⚠️ Alle Beispiele ohne explizite Quellenangabe sind fiktiv und dienen ausschließlich der Illustration
+    der Menschenbilder und Denkansätze.
+  </p>
+</section>
