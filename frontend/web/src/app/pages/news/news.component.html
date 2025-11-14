@@ -23,21 +23,8 @@
       <div class="news-hero__content">
         <p class="news-kicker">{{ hero.kicker }}</p>
         <h1>{{ hero.title }}</h1>
-        <p class="news-hero__lead">{{ hero.heroLead || hero.teaser }}</p>
-        <p class="news-hero__teaser">
-          {{ hero.body[2] || hero.teaser }}
-        </p>
         <div class="news-hero__actions">
           <a class="pill-link" [routerLink]="['/news', hero.id]">Zur Top-Story</a>
-          <a
-            *ngIf="hero.sourceUrl"
-            class="ghost-link"
-            [href]="hero.sourceUrl"
-            target="_blank"
-            rel="noopener"
-          >
-            Zur Quelle
-          </a>
         </div>
       </div>
     </article>
@@ -49,7 +36,6 @@
         <div class="hero-teaser__content">
           <p class="news-kicker">{{ teaser.kicker }}</p>
           <h2>{{ teaser.title }}</h2>
-          <p>{{ teaser.teaser }}</p>
           <a [routerLink]="['/news', teaser.id]">Mehr erfahren</a>
         </div>
       </article>
@@ -70,18 +56,8 @@
           <div class="news-card__body">
             <p class="news-kicker">{{ article.kicker }}</p>
             <h3>{{ article.title }}</h3>
-            <p class="news-card__teaser">{{ article.teaser }}</p>
             <div class="news-card__actions">
               <a class="pill-link pill-link--ghost" [routerLink]="['/news', article.id]">Zum Artikel</a>
-              <a
-                *ngIf="article.sourceUrl"
-                class="ghost-link"
-                [href]="article.sourceUrl"
-                target="_blank"
-                rel="noopener"
-              >
-                Quelle öffnen
-              </a>
             </div>
           </div>
         </article>
