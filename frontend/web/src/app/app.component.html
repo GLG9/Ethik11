@@ -142,14 +142,17 @@
           (click)="onStripClick(philosopher.id)"
           [attr.aria-current]="currentSection === philosopher.id ? 'true' : null"
         >
-          <img
-            [src]="philosopher.portrait.thumb"
-            [alt]="philosopher.portrait.alt"
-            loading="lazy"
-            decoding="async"
-            width="300"
-            height="300"
-          />
+          <div class="strip-thumb" [class.strip-thumb--kant]="philosopher.id === 'kant'">
+            <img
+              [src]="philosopher.portrait.thumb"
+              [alt]="philosopher.portrait.alt"
+              loading="lazy"
+              decoding="async"
+              width="300"
+              height="300"
+              [ngClass]="philosopher.portrait.className"
+            />
+          </div>
           <span class="strip-caption">{{ philosopher.name }}</span>
         </button>
       </li>
@@ -191,6 +194,7 @@
               width="480"
               height="640"
               sizes="(min-width: 1281px) 420px, (min-width: 901px) 360px, (min-width: 601px) 50vw, 80vw"
+              [ngClass]="philosopher.portrait.className"
             />
             <figcaption>{{ philosopher.portrait.caption }}</figcaption>
           </figure>

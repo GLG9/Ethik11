@@ -513,10 +513,41 @@ ul {
 .strip-item img {
   width: 100%;
   aspect-ratio: 3 / 4;
-  border-radius: clamp(0.65rem, 1.4vw, 1.05rem);
   object-fit: cover;
+  display: block;
   filter: sepia(0.6) grayscale(0.1) contrast(0.98);
-  transition: filter 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  transition: filter 0.3s var(--ease-out), transform 0.3s var(--ease-out), object-position 0.3s var(--ease-out);
+}
+
+.strip-thumb {
+  margin-bottom: clamp(0.45rem, 0.9vw, 0.8rem);
+  border-radius: clamp(0.65rem, 1.4vw, 1.05rem);
+  overflow: hidden;
+}
+
+.strip-item img.portrait-real {
+  filter: none;
+}
+
+.strip-item img.portrait-zoom {
+  transform: scale(1.08);
+}
+
+.strip-item img.portrait-zoom-strip {
+  transform: scale(1.18);
+  transform-origin: center;
+  object-position: center 95%;
+}
+
+.strip-thumb--kant img {
+  transform: translateY(-10px) scale(1.28);
+  object-position: center 70%;
+}
+
+.strip-item:hover .strip-thumb--kant img,
+.strip-item:focus-visible .strip-thumb--kant img {
+  transform: translateY(-10px) scale(1.36);
+  object-position: center 64%;
 }
 
 .strip-caption {
@@ -539,6 +570,17 @@ ul {
 .strip-item:focus-visible img {
   filter: sepia(0.42) grayscale(0.05) contrast(1.06);
   transform: scale(1.03);
+}
+
+.strip-item:hover img.portrait-zoom,
+.strip-item:focus-visible img.portrait-zoom {
+  transform: scale(1.12);
+}
+
+.strip-item:hover img.portrait-zoom-strip,
+.strip-item:focus-visible img.portrait-zoom-strip {
+  transform: scale(1.22);
+  object-position: center 92%;
 }
 
 .strip-item.is-active {
@@ -609,9 +651,22 @@ main {
   transition: filter 0.4s var(--ease-out), transform 0.4s var(--ease-out);
 }
 
+.philosopher-figure img.portrait-real {
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+.philosopher-figure img.portrait-zoom {
+  transform: scale(1.12);
+}
+
 .philosopher-figure:hover img {
   filter: sepia(0.4) grayscale(0.05) contrast(1.05);
   transform: scale(1.04);
+}
+
+.philosopher-figure:hover img.portrait-zoom {
+  transform: scale(1.2);
 }
 
 .philosopher-figure figcaption {

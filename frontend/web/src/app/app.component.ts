@@ -9,7 +9,7 @@ import {
   ViewChildren,
   OnInit
 } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProgressService, ProgressState } from './services/progress.service';
@@ -19,18 +19,6 @@ declare global {
     gsap?: any;
     ScrollTrigger?: any;
   }
-}
-
-interface PortraitConfig {
-  base: string;
-  accent: string;
-  detail: string;
-  highlight: string;
-  accentY?: number;
-  accentR?: number;
-  detailRx?: number;
-  detailRy?: number;
-  overlayOpacity?: number;
 }
 
 interface Philosopher {
@@ -44,6 +32,7 @@ interface Philosopher {
     thumb: string;
     alt: string;
     caption: string;
+    className?: string;
   };
   ideas: string[];
   quote?: string;
@@ -64,25 +53,10 @@ const focusableSelectors = [
   '[tabindex]:not([tabindex="-1"])'
 ].join(', ');
 
-function buildPortrait({
-  base,
-  accent,
-  detail,
-  highlight,
-  accentY = 150,
-  accentR = 120,
-  detailRx = 110,
-  detailRy = 90,
-  overlayOpacity = 0.35
-}: PortraitConfig): string {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 400'><rect width='320' height='400' fill='${base}'/><circle cx='160' cy='${accentY}' r='${accentR}' fill='${accent}' fill-opacity='0.82'/><ellipse cx='160' cy='260' rx='${detailRx}' ry='${detailRy}' fill='${detail}' opacity='0.9'/><path d='M90 120 Q160 ${accentY - 60} 230 120' stroke='${highlight}' stroke-width='12' stroke-linecap='round' stroke-opacity='0.45' fill='none'/><path d='M110 320h100v26H110z' fill='${highlight}' opacity='${overlayOpacity}'/></svg>`;
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-}
-
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor, NgIf, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [NgFor, NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -97,19 +71,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         'Plessner beschreibt den Menschen als exzentrisches Grenzwesen, das sich selbst nur über die Spiegelung in Welt und Gesellschaft versteht.',
       keyline: 'Exzentrische Positionalität als Balanceakt zwischen Leib, Körper und Kultur.',
       portrait: {
-        thumb: buildPortrait({
-          base: '#2c211b',
-          accent: '#d0b385',
-          detail: '#3a2f27',
-          highlight: '#e9e1d6',
-          accentY: 148,
-          accentR: 118,
-          detailRx: 112,
-          detailRy: 86,
-          overlayOpacity: 0.3
-        }),
-        alt: 'Abstraktes Porträt von Helmuth Plessner in warmen Brauntönen.',
-        caption: 'Helmuth Plessner (Illustration)'
+        thumb:
+          'https://tu-dresden.de/gsw/phil/iso/hpr/ressourcen/bilder/helmuth-plessner/@@images/9ac5ef1c-3193-4a9b-98c9-574557223b92.jpeg',
+        alt: 'Historisches Porträtfoto von Helmuth Plessner.',
+        caption: 'Helmuth Plessner · Foto: TU Dresden',
+        className: 'portrait-real'
       },
       ideas: [
         'Menschen als Grenzwesen zwischen Natur und Kultur mit exzentrischer Positionalität.',
@@ -129,19 +95,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         'Karl Marx analysiert den Menschen als produktives Gattungswesen, das sich durch gesellschaftliche Arbeit entfaltet und entfremdet werden kann.',
       keyline: 'Emanzipation entsteht in der Veränderung materieller Verhältnisse.',
       portrait: {
-        thumb: buildPortrait({
-          base: '#2a1f19',
-          accent: '#d0b385',
-          detail: '#3f3128',
-          highlight: '#c3a87c',
-          accentY: 160,
-          accentR: 125,
-          detailRx: 118,
-          detailRy: 92,
-          overlayOpacity: 0.28
-        }),
-        alt: 'Abstraktes Porträt von Karl Marx mit kräftigen Brauntönen.',
-        caption: 'Karl Marx (Illustration)'
+        thumb: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Karl_Marx.jpg',
+        alt: 'Porträtfotografie von Karl Marx.',
+        caption: 'Karl Marx · Wikimedia Commons',
+        className: 'portrait-real'
       },
       ideas: [
         'Historischer Materialismus: Bewusstsein folgt den Lebensverhältnissen.',
@@ -162,19 +119,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         'Kant bestimmt den Menschen als vernunftbegabtes, autonomes Subjekt, das sich durch Selbstgesetzgebung moralisch verpflichtet.',
       keyline: 'Würde entsteht aus Autonomie und dem Vermögen, Zwecke zu setzen.',
       portrait: {
-        thumb: buildPortrait({
-          base: '#2d221c',
-          accent: '#d4b88d',
-          detail: '#352a22',
-          highlight: '#f0e4d1',
-          accentY: 140,
-          accentR: 110,
-          detailRx: 102,
-          detailRy: 80,
-          overlayOpacity: 0.32
-        }),
-        alt: 'Abstraktes Porträt von Immanuel Kant mit hellen Highlights.',
-        caption: 'Immanuel Kant (Illustration)'
+        thumb:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Immanuel_Kant_%281724-1804%29_engraving.jpg/640px-Immanuel_Kant_%281724-1804%29_engraving.jpg',
+        alt: 'Kupferstich von Immanuel Kant aus dem 18. Jahrhundert.',
+        caption: 'Immanuel Kant · historischer Kupferstich',
+        className: 'portrait-real portrait-zoom portrait-zoom-strip'
       },
       ideas: [
         'Kategorischer Imperativ als Prüfstein moralischer Handlungen.',
@@ -194,19 +143,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         'Gehlen beschreibt den Menschen als Mängelwesen, das auf kulturelle Entlastung und stabile Institutionen angewiesen ist.',
       keyline: 'Institutionen sichern Handlungsspielräume und entlasten von Reizüberflutung.',
       portrait: {
-        thumb: buildPortrait({
-          base: '#271e18',
-          accent: '#caa778',
-          detail: '#3b2d25',
-          highlight: '#d9c5aa',
-          accentY: 158,
-          accentR: 122,
-          detailRx: 116,
-          detailRy: 94,
-          overlayOpacity: 0.33
-        }),
-        alt: 'Abstraktes Porträt von Arnold Gehlen mit gedeckten Strukturen.',
-        caption: 'Arnold Gehlen (Illustration)'
+        thumb:
+          'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEivj8RxkrAgbUlrDu09iZ_RFRdXBVUIa__U5tKw5vn8QJ8aqfujy_Yo8qZrKXxID2rvISU3gSQw-G0nmdbyo454NgZqXnnV-V1GFSecnG3VFl57p-nbXa1uAo2QWEjZfjG2agGCegRUl9g/s200/Arnold+Gehlen+und+die+Kultur+-+Portrait+Gehlen.jpg',
+        alt: 'Fotografie von Arnold Gehlen.',
+        caption: 'Arnold Gehlen · Fotoquelle: diepaideia.blogspot.com',
+        className: 'portrait-real'
       },
       ideas: [
         'Mängelwesen-These: biologische Unbestimmtheit verlangt kulturelle Ergänzung.',
@@ -226,19 +167,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         'Löwith vergleicht religiöse und säkulare Geschichtsdeutungen und zeigt, wie moderne Sinnentwürfe theologische Muster übernehmen.',
       keyline: 'Geschichtsdenken schwankt zwischen Heilserwartung und nüchterner Weltbeobachtung.',
       portrait: {
-        thumb: buildPortrait({
-          base: '#211914',
-          accent: '#cdaa80',
-          detail: '#36291f',
-          highlight: '#e6d6be',
-          accentY: 146,
-          accentR: 116,
-          detailRx: 108,
-          detailRy: 88,
-          overlayOpacity: 0.29
-        }),
-        alt: 'Abstraktes Porträt von Karl Löwith mit kontrastreichen Flächen.',
-        caption: 'Karl Löwith (Illustration)'
+        thumb: 'https://jochenteuffel.com/wp-content/uploads/2023/11/karl-loewith2.jpg',
+        alt: 'Porträtfoto von Karl Löwith.',
+        caption: 'Karl Löwith · Foto: jochenteuffel.com',
+        className: 'portrait-real'
       },
       ideas: [
         'Analyse der Geschichtsphilosophie als säkularisierte Eschatologie.',
