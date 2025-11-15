@@ -201,28 +201,70 @@
           <div class="philosopher-content">
             <header class="philosopher-header">
               <h2>{{ philosopher.name }}</h2>
-              <p class="philosopher-vita">
-                Lebensdaten: {{ philosopher.life }}<ng-container *ngIf="philosopher.epoch"> • Epoche: {{ philosopher.epoch }}</ng-container>
-              </p>
-              <p class="philosopher-abstract">
-                {{ philosopher.summary }}
-              </p>
-              <p class="philosopher-highlight" *ngIf="philosopher.keyline">
-                {{ philosopher.keyline }}
-              </p>
+              <ng-container *ngIf="showExtendedContent">
+                <p class="philosopher-vita">
+                  Lebensdaten: {{ philosopher.life }}<ng-container *ngIf="philosopher.epoch"> • Epoche: {{ philosopher.epoch }}</ng-container>
+                </p>
+                <p class="philosopher-abstract">
+                  {{ philosopher.summary }}
+                </p>
+                <p class="philosopher-highlight" *ngIf="philosopher.keyline">
+                  {{ philosopher.keyline }}
+                </p>
+              </ng-container>
             </header>
-            <div class="philosopher-ideas">
-              <h3>Hauptideen</h3>
-              <ul>
-                <li *ngFor="let idea of philosopher.ideas">
-                  {{ idea }}
-                </li>
-              </ul>
-            </div>
-            <blockquote class="philosopher-quote" *ngIf="philosopher.quote">
-              „{{ philosopher.quote }}”
-              <cite *ngIf="philosopher.quoteSource">{{ philosopher.quoteSource }}</cite>
-            </blockquote>
+            <section
+              class="philosopher-profile"
+              *ngIf="philosopher.profile as profile"
+              aria-label="Steckbrief"
+            >
+              <article class="profile-card profile-card--facts">
+                <p class="profile-label">Steckbrief</p>
+                <p class="profile-meta">{{ profile.birth }}</p>
+                <p class="profile-meta">{{ profile.death }}</p>
+              </article>
+              <article class="profile-card profile-card--life">
+                <p class="profile-label">Leben</p>
+                <ul class="profile-list">
+                  <li *ngFor="let moment of profile.lifeEvents">
+                    {{ moment }}
+                  </li>
+                </ul>
+              </article>
+              <article class="profile-card profile-card--ideas">
+                <p class="profile-label">Grundidee</p>
+                <ul class="profile-list">
+                  <li *ngFor="let core of profile.coreIdeas">
+                    {{ core }}
+                  </li>
+                </ul>
+                <ul class="profile-links" *ngIf="profile.references?.length">
+                  <li *ngFor="let reference of profile.references">
+                    <a
+                      [href]="reference.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ reference.label }}
+                    </a>
+                  </li>
+                </ul>
+              </article>
+            </section>
+            <ng-container *ngIf="showExtendedContent">
+              <div class="philosopher-ideas">
+                <h3>Hauptideen</h3>
+                <ul>
+                  <li *ngFor="let idea of philosopher.ideas">
+                    {{ idea }}
+                  </li>
+                </ul>
+              </div>
+              <blockquote class="philosopher-quote" *ngIf="philosopher.quote">
+                „{{ philosopher.quote }}”
+                <cite *ngIf="philosopher.quoteSource">{{ philosopher.quoteSource }}</cite>
+              </blockquote>
+            </ng-container>
           </div>
         </div>
       </section>

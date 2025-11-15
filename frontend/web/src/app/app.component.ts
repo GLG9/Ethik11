@@ -21,6 +21,19 @@ declare global {
   }
 }
 
+interface PhilosopherReference {
+  label: string;
+  url: string;
+}
+
+interface PhilosopherProfile {
+  birth: string;
+  death: string;
+  lifeEvents: string[];
+  coreIdeas: string[];
+  references: PhilosopherReference[];
+}
+
 interface Philosopher {
   id: string;
   name: string;
@@ -34,6 +47,7 @@ interface Philosopher {
     caption: string;
     className?: string;
   };
+  profile: PhilosopherProfile;
   ideas: string[];
   quote?: string;
   quoteSource?: string;
@@ -61,6 +75,7 @@ const focusableSelectors = [
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+  showExtendedContent = false;
   philosophers: Philosopher[] = [
     {
       id: 'plessner',
@@ -76,6 +91,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         alt: 'Historisches Porträtfoto von Helmuth Plessner.',
         caption: 'Helmuth Plessner · Foto: TU Dresden',
         className: 'portrait-real'
+      },
+      profile: {
+        birth: '* 4. September 1892 (Wiesbaden)',
+        death: '† 12. Juni 1985 (Göttingen)',
+        lifeEvents: [
+          'Einleitung in die philosophische Anthropologie“',
+          '➔ „exzentrische Positionalität“',
+          '- wegen jüdischem Vaterhaus in wurde er in der NS-Zeit nach Istanbul vertrieben',
+          '- Rückkehr nach Kriegsende',
+          '- Lehrte dann in New York, Zürich und verfasste bis 1975 Essays,… zur Philosophie'
+        ],
+        coreIdeas: [
+          '- kann sich von außen (objektiv) und von innen (subjektiv) betrachten',
+          '- Mensch besitzt „exzentrische Positionalität“'
+        ],
+        references: [
+          {
+            label: 'https://de.wikipedia.org/wiki/Helmuth_Plessner',
+            url: 'https://de.wikipedia.org/wiki/Helmuth_Plessner'
+          },
+          {
+            label: 'https://www.wiesbaden.de/stadtlexikon/stadtlexikon-a-z/plessner-helmuth',
+            url: 'https://www.wiesbaden.de/stadtlexikon/stadtlexikon-a-z/plessner-helmuth'
+          }
+        ]
       },
       ideas: [
         'Menschen als Grenzwesen zwischen Natur und Kultur mit exzentrischer Positionalität.',
@@ -99,6 +139,29 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         alt: 'Porträtfotografie von Karl Marx.',
         caption: 'Karl Marx · Wikimedia Commons',
         className: 'portrait-real'
+      },
+      profile: {
+        birth: '* 5. Mai 1818 (Trier)',
+        death: '† 14. März 1883 (London)',
+        lifeEvents: [
+          '- studiert 1835 Rechtswissenschaften',
+          '- 1836-1841 studiert er zusätzlich Philosophie',
+          '- trifft 1842 Friedrich Engels in Köln',
+          '- Marx und Engels verfassen 1847 eine „Schrift für die Reorganisation des Bundes“',
+          '- „Manifest der Kommunistischen Partei“ 1848 veröffentlicht',
+          '- 1859 veröffentlicht er seine Kritik zum Kapitalismus',
+          '- Arbeit bei zahlreichen Zeitschriften und verfasste weitere Texte seiner kommunistischen Idee'
+        ],
+        coreIdeas: [
+          '- Der Mensch kann sich nur durch Arbeit verwirklichen',
+          '- er entfremdet sich durch den Kapitalismus von der Arbeit'
+        ],
+        references: [
+          {
+            label: 'https://www.dhm.de/lemo/biografie/karl-marx',
+            url: 'https://www.dhm.de/lemo/biografie/karl-marx'
+          }
+        ]
       },
       ideas: [
         'Historischer Materialismus: Bewusstsein folgt den Lebensverhältnissen.',
@@ -125,6 +188,34 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         caption: 'Immanuel Kant · historischer Kupferstich',
         className: 'portrait-real portrait-zoom portrait-zoom-strip portrait-figure-kant'
       },
+      profile: {
+        birth: '*22. April 1724 (Königsberg)',
+        death: '† 12. Februar 1804 (Königsberg)',
+        lifeEvents: [
+          'Mensch?',
+          '- Aufklärung auf ihn zurückzuführen',
+          '- begann 1740 mit dem Philosophie-Studium',
+          '- arbeitete 10 Jahre als Hauslehrer und setzte dann sein Studium fort',
+          '- 1754 verfasste er erstes wichtigstes Werk „Allgemeine Naturgeschichte und Theorie des Himmels“ über die eigentliche Größe des Universums.',
+          '- Arbeitete ab 1770 als Professor für Logik und Metaphysik in Königsberg',
+          '- 1781 vermutlich wichtigstes Werk „Kritik der reinen Vernunft“ veröffentlich',
+          '➔ Was kann ich wissen? Was soll ich tun? Was darf ich hoffen? Was ist der'
+        ],
+        coreIdeas: [
+          '- Der Mensch ist ein „ungeselliger Geselle“',
+          '- er steht zwischen seinem Egoismus und der Gesellschaft, diese Spannung nennt er Antagonismus'
+        ],
+        references: [
+          {
+            label: 'https://www.geo.de/geolino/mensch/1437-rtkl-weltveraenderer-immanuel-kant',
+            url: 'https://www.geo.de/geolino/mensch/1437-rtkl-weltveraenderer-immanuel-kant'
+          },
+          {
+            label: 'https://studyflix.de/allgemeinwissen/immanuel-kant-5125',
+            url: 'https://studyflix.de/allgemeinwissen/immanuel-kant-5125'
+          }
+        ]
+      },
       ideas: [
         'Kategorischer Imperativ als Prüfstein moralischer Handlungen.',
         'Mündigkeit durch Gebrauch der eigenen Vernunft ohne Leitung eines anderen.',
@@ -149,6 +240,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         caption: 'Arnold Gehlen · Fotoquelle: diepaideia.blogspot.com',
         className: 'portrait-real'
       },
+      profile: {
+        birth: '*29. Januar 1904 (Leipzig)',
+        death: '† 30. Januar 1976 (Hamburg)',
+        lifeEvents: [
+          '- Studium Philosophie, Germanistik, Psychologie und Kunstgeschichte bis 1927',
+          '- ab 1930 bis 1934 Privatdozent für Philosophie in Leipzig',
+          '- Eintritt in NSDAP 1933',
+          '- von 1934 bis 1969 ordentlicher Professor für Philosophie und Soziologie in zahlreichen Städten (Leipzig, Kaliningrad, Wien, Aachen)',
+          '- war von Untersuchungsverfahren im Rahmen der Entnazifizierung betroffen'
+        ],
+        coreIdeas: [
+          '- der Mensch ist ein „Mängelwesen“',
+          '- er ist nicht durch spezielle Organe und Instinkte an Umwelt angepasst'
+        ],
+        references: [
+          {
+            label: 'https://agso.uni-graz.at/archive/lexikon/klassiker/gehlen/16bio.htm#',
+            url: 'https://agso.uni-graz.at/archive/lexikon/klassiker/gehlen/16bio.htm#'
+          }
+        ]
+      },
       ideas: [
         'Mängelwesen-These: biologische Unbestimmtheit verlangt kulturelle Ergänzung.',
         'Handlungsentlastung durch Institutionen, Rituale und Technik.',
@@ -171,6 +283,28 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         alt: 'Porträtfoto von Karl Löwith.',
         caption: 'Karl Löwith · Foto: jochenteuffel.com',
         className: 'portrait-real'
+      },
+      profile: {
+        birth: '*9. Januar 1897 (München)',
+        death: '† 25. Mai 1973 (Heidelberg)',
+        lifeEvents: [
+          '- geriet nach dem Abitur in italienische Kriegsgefangenschaft',
+          '- Rückkehr 1919 und Beginn eines Philosophie- und Biologie-Studiums bis 1922',
+          '- als Jude 1934 nach Rom ausgewandert, später 1936 als Professor an japan. Universität',
+          '- kam 1952 nach Deutschland zurück nachdem er noch 11 Jahre in den USA tätig war',
+          '- bis 1964 lehrte er an der Universität in Heidelberg und veröffentlichte weitere philosophische Schriften'
+        ],
+        coreIdeas: [
+          '- der Mensch ist ein „Kulturwesen“',
+          '- er ist ein Teil der Natur, kann sie „erkennen“ und hinterfragen, wodurch er sich jedoch von ihr entfremdet'
+        ],
+        references: [
+          {
+            label: 'https://www.deutsche-biographie.de/gnd118574043.html#ndbcontent',
+            url: 'https://www.deutsche-biographie.de/gnd118574043.html#ndbcontent'
+          },
+          { label: 'https://de.wikipedia.org/wiki/Karl_Löwith', url: 'https://de.wikipedia.org/wiki/Karl_Löwith' }
+        ]
       },
       ideas: [
         'Analyse der Geschichtsphilosophie als säkularisierte Eschatologie.',

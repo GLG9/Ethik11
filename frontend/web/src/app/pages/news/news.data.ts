@@ -106,7 +106,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Wenn er Gitarre spielt und singt fühlt er die Emotionen und sich als Person, wie er dabei empfindet.',
       'Er betrachtet sich jedoch gleichzeitig von außen, indem er reflektiert, wie er auf die Zuschauer wirkt und ob er richtig spielt.',
       'Daraus bildet sich das Ich, also das Wesen des Musikers.',
-      'Die Menschen jubeln, sodass der Musiker daraus schließen kann, dass den Menschen das Lied gefüllt.',
+      'Die Menschen jubeln, sodass der Musiker daraus schließen kann, dass den Menschen das Lied gefällt.',
     ],
     image: {
       src: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80',
