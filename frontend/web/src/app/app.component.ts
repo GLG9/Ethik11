@@ -10,6 +10,7 @@ import {
   OnInit
 } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProgressService, ProgressState } from './services/progress.service';
@@ -70,7 +71,7 @@ const focusableSelectors = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [NgFor, NgIf, NgClass, RouterLink, RouterLinkActive, RouterOutlet, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -319,53 +320,78 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   compareRows: CompareRow[] = [
     {
-      label: 'Menschenbild',
+      label: '(1) Wesen/Eigenschaften des Menschen',
       values: {
-        plessner: 'Grenzwesen mit exzentrischer Positionalität und Doppelperspektive auf sich selbst.',
-        marx: 'Produktives Gattungswesen, das sich in Arbeit und Kooperation verwirklicht.',
-        kant: 'Autonomes Vernunftwesen mit unveräußerlicher Würde.',
-        gehlen: 'Mängelwesen, das Ausgleich durch Kultur und Institutionen braucht.',
-        loewith: 'Historisches Wesen zwischen Transzendenz und säkularer Selbstdeutung.'
+        marx:
+          '- Mensch ist produktiv, sozial und ein Gattungswesen, dass Gesellschaft braucht\n- er verwirklicht sich durch gewollte Arbeit\n- gestaltet die Welt und drückt sich über sein Produkt aus\n- wird im Kapitalismus von der Arbeit entfremdet',
+        plessner:
+          '- Mensch ist ein Grenzwesen zwischen Natur und Kultur\n- er besitzt „exzentrische Positionlität“\n- hat Doppelaspektivität zwischen Leib und Körper\n- reflektiert die Vergangenheit und plant die Zukunft objektiv',
+        loewith:
+          '- Mensch ist ein Kulturwesen\n- er „erkennt“ die Natur und distanziert sich\n- schafft Kultur um Instinktmangel auszugleichen\n- ist von Naturgesetzen abhängig, lebt aber in Kultur',
+        gehlen:
+          '- Mensch ist ein Mängelwesen (instinktarm, unspezialisiert)\n- er braucht Institutionen für Stabilität und Orientierung\n- muss seine Umwelt aktiv umgestalten\n- ist lernfähig und muss Erkenntnis gewinnen',
+        kant:
+          '- Mensch ist ein ungeselliger Geselle\n- er ist im Zwiespalt zwischen Egoismus und Gesellschaft\n- steht in Konkurrenz zu anderen\n- kann manche Ziele nur zusammen erreichen'
       }
     },
     {
-      label: 'Natur/Kultur',
+      label: '(2) Unterschiede und Gemeinsamkeiten zum Tier',
       values: {
-        plessner: 'Verflochten; Kultur erweitert natürliche Grenzen des Leibes.',
-        marx: 'Natur wird durch Arbeit verformt und gesellschaftlich angeeignet.',
-        kant: 'Naturgesetze und praktische Vernunft bilden zwei Ordnungen.',
-        gehlen: 'Naturdefizit zwingt zur kulturellen Entlastung.',
-        loewith: 'Traditionen strukturieren Sinn, bleiben aber geschichtlich prekär.'
+        marx:
+          '- Tiere arbeiten zweckgebunden und instinktiv\n- Mensch arbeitet bewusst und freiwillig\n- Unterschied ist die freie Produktivität des Menschen',
+        plessner:
+          '- Tiere besitzen „geschlossene Positionalität“ und haben keinen Außenaspekt\n- Mensch hat einen Außenaspekt und betrachtet sich objektiv\n- beide sind organisch und von der Natur abgegrenzt',
+        loewith:
+          '- Tiere „kennen“ ihre Natur (ohne Reflexion)\n- Mensch „erkennt“ seine Natur (mit Reflexion)\n- Tiere leben unmittelbar in der Natur, aber Mensch distanziert sich durch Kultur',
+        gehlen:
+          '- Tiere folgen ausschließlich ihren Instinkten uns sind spezialisiert\n- Mensch hat Instinktschwäche, ist unspezialisiert und unsicher/orientierungslos\n- Mensch muss künstlich überleben',
+        kant:
+          '- Mensch hat eine Doppelnatur: gesellig und ungesellig\n- nur Menschen haben Moral und Vernunft\n- Mensch strebt nach Fortschritt und Weiterentwicklung'
       }
     },
     {
-      label: 'Gesellschaft',
+      label: '(3) Bedeutung der Natur/Umwelt',
       values: {
-        plessner: 'Rollenspiele und Institutionen ermöglichen Distanz und Nähe.',
-        marx: 'Klassengesellschaft; Veränderung durch kollektive Praxis.',
-        kant: 'Rechtsstaat und Öffentlichkeit als Felder autonomer Bürger.',
-        gehlen: 'Ordnung muss Stabilität sichern, um Überforderung zu vermeiden.',
-        loewith: 'Gemeinschaften schwanken zwischen Glaubensbindung und Skepsis.'
+        marx:
+          '- ist der Raum in der der Mensch seine Arbeit verrichtet\n- Natur und Umwelt sind Grundlage zur Gestaltung',
+        plessner:
+          '- Natur ist ein Bestandteil seines „Ichs“\n- Natur gibt körperliche Grundlage\n- Mensch kann nie vollständig in der Natur aufgehen',
+        loewith:
+          '- Mensch ist direkter Teil der Natur\n- Natur ist der Ursprung, aber nicht die Heimat\n- Natur beherrscht den Menschen durch Gesetzte etc.',
+        gehlen:
+          '- Natur überfordert den Menschen, ohne Kultur nicht lebensfähig\n- Natur ist Grundlage zur Umformung (z.B. Ressourcen)\n- Natur macht den Menschen zum Mängelwesen',
+        kant:
+          '- Natur gibt dem Menschen seinen Egoismus\n- Neid, Ehrgeiz und Konkurrenz sind natürliche Antriebe'
       }
     },
     {
-      label: 'Institutionen',
+      label: '(4) Bedeutung der Kultur/Normen und Regeln',
       values: {
-        plessner: 'Eröffnen Perspektivenwechsel und halten Ambivalenzen aus.',
-        marx: 'Sind Ausdruck von Produktionsverhältnissen und Herrschaft.',
-        kant: 'Sollen Vernunftprinzipien und Freiheit garantieren.',
-        gehlen: 'Entlasten, stiften Routinen, verhindern chaotische Spontaneität.',
-        loewith: 'Werden historisch relativ, bleiben jedoch Deutungsanker.'
+        marx:
+          '- Kultur ist die Voraussetzung für Ökonomie\n- entsteht aus den Klassen\n- Kultur wird zur Entfremdung umgewandelt',
+        plessner:
+          '- Kultur ist „natürliche Künstlichkeit“\n- Reaktion auf die exzentrische Positionalität\n- Kultur hilft Spannung zwischen dem Innen- und Außenaspekt, wie Selbstzweifel zu minimieren',
+        loewith:
+          '- Kultur ist das Ergebnis der Distanzierung von der Natur\n- zeigt Erkennen, Denken, und Freiheit des Menschen\n- ersetzt Mängel durch Ordnung und Orientierung',
+        gehlen:
+          '- Kultur ist die „zweite Natur des Menschen“\n- ersetzt fehlende Instinkte\n- ohne Kultur und deren Institutionen wäre der Mensch nicht überlebensfähig',
+        kant:
+          '- garantiert Austausch, Kooperation und Recht\n- Entwicklung von Wissen und Institutionen\n- Verursacht Streit und somit Fortschritt\n- Ergebnis von Vernunft und Moral'
       }
     },
     {
-      label: 'Kritik/Hinweise',
+      label: '(5) Bedeutung der Gesellschaft',
       values: {
-        plessner: 'Gefahr: anthropologische Theorie bleibt neutral gegenüber Macht.',
-        marx: 'Ökonomischer Fokus kann kulturelle Differenzen unterschätzen.',
-        kant: 'Abstrakte Moral braucht soziale Einbettung.',
-        gehlen: 'Konservativer Bias, geringe Sensibilität für Wandel.',
-        loewith: 'Melancholischer Ton, wenig positive Handlungsperspektive.'
+        marx:
+          '- Struktur der Klassen\n- sehr wichtig für den Menschen als Gattungswesen\n- bestimmt das Wesen des Menschen',
+        plessner:
+          '- stabilisiert den Menschen, da sie Normen gibt\n- Normen verhindern Unsicherheit und Chaos\n- Mensch braucht Gesellschaft als Orientierung',
+        loewith:
+          '- Gesellschaft gibt Ordnung und Verhalten, das Instinkte ersetzt\n- Mensch wird durch Zusammenleben und Reflexion zum Kulturwesen\n- Gesellschaft gibt Rituale, Traditionen, Sprache und Technik',
+        gehlen:
+          '- lebensnotwendig für Instinktschwäche\n- Institutionen wie Familie geben Sicherheit\n- Gesellschaft schützt vor Chaos, durch vorhersehbare Strukturen',
+        kant:
+          '- Grundlage für Konflikte und Spannungen\n- ermöglicht Ziele, die nicht allein erreichbar sind\n- gibt dem Menschen Halt'
       }
     }
   ];
@@ -412,6 +438,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly router: Router,
     private readonly progressService: ProgressService
   ) {
+    if (this.isBrowser) {
+      this.compareColumnCount = window.matchMedia('(max-width: 900px)').matches ? 2 : 3;
+    }
     this.updateLandingState(this.router.url);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

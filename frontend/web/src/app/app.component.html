@@ -304,8 +304,8 @@
               <select
                 class="compare-select__control"
                 [id]="'compare-select-' + i"
-                [value]="selection"
-                (change)="onCompareSelectionChange(i, $any($event.target).value)"
+                [ngModel]="selection"
+                (ngModelChange)="onCompareSelectionChange(i, $event)"
               >
                 <option
                   *ngFor="let philosopher of philosophers"
