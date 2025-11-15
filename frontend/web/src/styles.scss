@@ -12,6 +12,58 @@
   color-scheme: dark;
 }
 
+$reveal-distance: 40px;
+$reveal-duration: 0.6s;
+$reveal-delay: 0s;
+$reveal-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+@mixin scroll-reveal($distance-x: 0, $distance-y: $reveal-distance) {
+  opacity: 0;
+  transform: translate3d($distance-x, $distance-y, 0);
+  transition:
+    opacity $reveal-duration $reveal-ease $reveal-delay,
+    transform $reveal-duration $reveal-ease $reveal-delay;
+  will-change: opacity, transform;
+
+  &.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.reveal-on-scroll {
+  opacity: 1;
+  transform: none;
+
+  &.reveal-ready {
+    @include scroll-reveal(0, $reveal-distance);
+  }
+}
+
+.reveal-on-scroll.reveal-ready.reveal-from-left {
+  @include scroll-reveal(-$reveal-distance, 0);
+}
+
+.reveal-on-scroll.reveal-ready.reveal-from-right {
+  @include scroll-reveal($reveal-distance, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .reveal-on-scroll.reveal-ready {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+html.reduced-motion .reveal-on-scroll,
+html.reduced-motion .reveal-on-scroll.reveal-ready {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 *,
 *::before,
 *::after {

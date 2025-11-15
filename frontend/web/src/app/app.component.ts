@@ -408,6 +408,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly totalModels = 5;
   compareColumnCount = 3;
   compareSelections: string[] = [];
+  private viewInitialized = false;
   private progressSub?: Subscription;
 
   @ViewChild('offcanvas') offcanvas?: ElementRef<HTMLElement>;
@@ -419,17 +420,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private focusableMenuElements: HTMLElement[] = [];
   private lastFocused: Element | null = null;
   private scrollObserver?: IntersectionObserver;
+  private scrollRevealObserver?: IntersectionObserver;
   private resizeListener?: () => void;
   private keydownListener?: () => void;
   private reduceMotionQuery?: MediaQueryList;
   private reduceMotionListener?: (event: MediaQueryListEvent) => void;
   private resizeRaf?: number;
   private animationInstances: any[] = [];
-  private pinTriggers: any[] = [];
-  private mediaMatchContext: any;
   private animationRetryHandle?: number;
   private compareMediaQuery?: MediaQueryList;
   private compareMediaListener?: (event: MediaQueryListEvent) => void;
+  private pendingRevealElements: Set<HTMLElement> = new Set();
+  private revealScrollListener?: () => void;
+  private revealFallbackResizeListener?: () => void;
+  private revealFallbackRaf?: number;
 
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
@@ -466,10 +470,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.viewInitialized = true;
     this.setupReducedMotionWatcher();
+    this.setupScrollRevealObserver();
     this.updateHeaderHeight();
     this.setupScrollSpy();
-    this.scrollTargets?.changes.subscribe(() => this.setupScrollSpy());
+    this.scrollTargets?.changes.subscribe(() => {
+      this.setupScrollSpy();
+      this.setupScrollRevealObserver();
+    });
     this.setupAnimations();
 
     this.resizeListener = this.renderer.listen('window', 'resize', () => {
@@ -489,6 +498,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.closeMenu(false);
     this.killAnimations();
+    this.destroyScrollRevealObserver();
     if (this.scrollObserver) {
       this.scrollObserver.disconnect();
     }
@@ -666,6 +676,174 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setActiveSection('intro');
   }
 
+  private setupScrollRevealObserver(): void {
+    if (!this.isBrowser || !this.showLanding) {
+      this.destroyScrollRevealObserver();
+      return;
+    }
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>('.reveal-on-scroll')
+    );
+    if (!elements.length) {
+      this.destroyScrollRevealObserver();
+      this.pendingRevealElements.clear();
+      this.teardownRevealFallback();
+      return;
+    }
+
+    if (this.reduceMotionQuery?.matches) {
+      this.destroyScrollRevealObserver();
+      elements.forEach((element) => element.classList.add('is-visible'));
+      this.pendingRevealElements.clear();
+      this.teardownRevealFallback();
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      this.destroyScrollRevealObserver();
+      elements.forEach((element) => element.classList.add('is-visible'));
+      this.pendingRevealElements.clear();
+      this.teardownRevealFallback();
+      return;
+    }
+
+    const pendingElements = this.filterRevealElements(elements);
+    if (!pendingElements.length) {
+      this.destroyScrollRevealObserver();
+      this.pendingRevealElements.clear();
+      this.teardownRevealFallback();
+      return;
+    }
+
+    this.destroyScrollRevealObserver();
+    this.scrollRevealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+            this.pendingRevealElements.delete(entry.target as HTMLElement);
+          }
+        });
+        if (!this.pendingRevealElements.size) {
+          this.teardownRevealFallback();
+        }
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -10% 0px'
+      }
+    );
+
+    this.pendingRevealElements = new Set(pendingElements);
+    pendingElements.forEach((element) => this.scrollRevealObserver?.observe(element));
+    this.setupRevealFallback();
+  }
+
+  private destroyScrollRevealObserver(): void {
+    if (this.scrollRevealObserver) {
+      this.scrollRevealObserver.disconnect();
+      this.scrollRevealObserver = undefined;
+    }
+    this.pendingRevealElements.clear();
+    this.teardownRevealFallback();
+  }
+
+  private filterRevealElements(elements: HTMLElement[]): HTMLElement[] {
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    return elements.filter((element) => {
+      element.classList.add('reveal-ready');
+      if (element.classList.contains('is-visible')) {
+        return false;
+      }
+      if (this.isElementInRevealViewport(element, viewportHeight)) {
+        element.classList.add('is-visible');
+        return false;
+      }
+      return true;
+    });
+  }
+
+  private isElementInRevealViewport(element: HTMLElement, viewportHeight: number): boolean {
+    if (!viewportHeight) {
+      return false;
+    }
+    const rect = element.getBoundingClientRect();
+    const upperThreshold = viewportHeight * 0.85;
+    const lowerThreshold = viewportHeight * -0.1;
+    return rect.top <= upperThreshold && rect.bottom >= lowerThreshold;
+  }
+
+  private setupRevealFallback(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    if (!this.pendingRevealElements.size) {
+      this.teardownRevealFallback();
+      return;
+    }
+    if (!this.revealScrollListener) {
+      const handler = () => this.scheduleRevealFallbackCheck();
+      this.revealScrollListener = this.renderer.listen('window', 'scroll', handler);
+      this.revealFallbackResizeListener = this.renderer.listen('window', 'resize', handler);
+    }
+    this.scheduleRevealFallbackCheck();
+  }
+
+  private scheduleRevealFallbackCheck(): void {
+    if (!this.isBrowser || !this.pendingRevealElements.size) {
+      this.teardownRevealFallback();
+      return;
+    }
+    if (this.revealFallbackRaf) {
+      return;
+    }
+    this.revealFallbackRaf = window.requestAnimationFrame(() => {
+      this.revealFallbackRaf = undefined;
+      this.runRevealFallbackCheck();
+    });
+  }
+
+  private runRevealFallbackCheck(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    if (!this.pendingRevealElements.size) {
+      this.teardownRevealFallback();
+      return;
+    }
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const elementsToClear: HTMLElement[] = [];
+    this.pendingRevealElements.forEach((element) => {
+      if (this.isElementInRevealViewport(element, viewportHeight)) {
+        element.classList.add('is-visible');
+        elementsToClear.push(element);
+      }
+    });
+    elementsToClear.forEach((element) => {
+      this.pendingRevealElements.delete(element);
+      this.scrollRevealObserver?.unobserve(element);
+    });
+    if (!this.pendingRevealElements.size) {
+      this.teardownRevealFallback();
+    }
+  }
+
+  private teardownRevealFallback(): void {
+    if (this.revealScrollListener) {
+      this.revealScrollListener();
+      this.revealScrollListener = undefined;
+    }
+    if (this.revealFallbackResizeListener) {
+      this.revealFallbackResizeListener();
+      this.revealFallbackResizeListener = undefined;
+    }
+    if (this.revealFallbackRaf) {
+      window.cancelAnimationFrame(this.revealFallbackRaf);
+      this.revealFallbackRaf = undefined;
+    }
+  }
+
   private setActiveSection(id: string): void {
     if (this.currentSection === id) {
       return;
@@ -698,11 +876,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateLandingState(url: string): void {
     if (!url) {
+      const changed = !this.showLanding;
       this.showLanding = true;
+      if (changed) {
+        this.handleLandingToggle(true);
+      }
       return;
     }
     const cleaned = url.split('?')[0].split('#')[0];
-    this.showLanding = cleaned === '/' || cleaned === '';
+    const isLanding = cleaned === '/' || cleaned === '';
+    const changed = this.showLanding !== isLanding;
+    this.showLanding = isLanding;
+    if (changed) {
+      this.handleLandingToggle(isLanding);
+    }
+  }
+
+  private handleLandingToggle(isLanding: boolean): void {
+    if (!this.isBrowser || !this.viewInitialized) {
+      return;
+    }
+    if (isLanding) {
+      window.requestAnimationFrame(() => this.setupScrollRevealObserver());
+    } else {
+      this.destroyScrollRevealObserver();
+    }
   }
 
   private updateVisitedCount(state: ProgressState): void {
@@ -718,6 +916,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toggleReducedMotionClass(this.reduceMotionQuery.matches);
     this.reduceMotionListener = (event: MediaQueryListEvent) => {
       this.toggleReducedMotionClass(event.matches);
+      this.setupScrollRevealObserver();
       if (event.matches) {
         this.killAnimations();
       } else {
@@ -804,6 +1003,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.compareSelections[duplicateIndex] = fallback ?? '';
     }
     this.ensureCompareSelectionCount();
+    this.compareSelections = [...this.compareSelections];
   }
 
   trackCompareCard(index: number, selection: string): string {
@@ -861,8 +1061,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.killAnimations();
     gsap.registerPlugin(ScrollTrigger);
-    this.mediaMatchContext = ScrollTrigger.matchMedia();
-
     this.animationInstances.push(
       gsap.from('.site-title', {
         opacity: 0,
@@ -939,28 +1137,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     }
 
-    this.mediaMatchContext.add('(min-width: 901px)', () => {
-      const localPins: any[] = [];
-      (gsap.utils.toArray('.philosopher-section') as HTMLElement[]).forEach((section: HTMLElement) => {
-        const figure = section.querySelector('.philosopher-figure');
-        if (!figure) {
-          return;
-        }
-        const trigger = ScrollTrigger.create({
-          trigger: section,
-          start: 'top+=80 top',
-          end: 'bottom bottom-=120',
-          pin: figure,
-          pinSpacing: false
-        });
-        localPins.push(trigger);
-      });
-      this.pinTriggers.push(...localPins);
-      return () => {
-        localPins.forEach((trigger) => trigger.kill());
-        this.pinTriggers = this.pinTriggers.filter((trigger) => !localPins.includes(trigger));
-      };
-    });
   }
 
   private killAnimations(): void {
@@ -986,11 +1162,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.animationInstances = [];
-    this.pinTriggers.forEach((trigger) => trigger.kill());
-    this.pinTriggers = [];
-    if (this.mediaMatchContext && typeof this.mediaMatchContext.kill === 'function') {
-      this.mediaMatchContext.kill();
-      this.mediaMatchContext = null;
+    if (this.isBrowser) {
+      const scrollTrigger = window.ScrollTrigger;
+      if (scrollTrigger && typeof scrollTrigger.getAll === 'function') {
+        scrollTrigger.getAll().forEach((trigger: any) => {
+          if (trigger && trigger.pin && trigger.trigger?.classList?.contains('philosopher-section')) {
+            trigger.kill();
+          }
+        });
+      }
     }
   }
 }

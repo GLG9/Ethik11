@@ -133,7 +133,7 @@
 
 <ng-container *ngIf="showLanding; else routedContent">
   <section class="hero" aria-labelledby="hero-title">
-    <ul class="philosopher-strip" aria-label="Philosophen Galerie">
+    <ul class="philosopher-strip reveal-on-scroll reveal-from-left" aria-label="Philosophen Galerie">
       <li *ngFor="let philosopher of philosophers">
         <button
           type="button"
@@ -157,7 +157,7 @@
         </button>
       </li>
     </ul>
-    <div class="site-heading">
+    <div class="site-heading reveal-on-scroll reveal-from-right">
       <h1 id="hero-title" class="site-title site-title--bleed">Philosophische Menschenbilder</h1>
     </div>
   </section>
@@ -165,11 +165,11 @@
   <main id="main-content">
     <section
       id="intro"
-      class="intro scroll-target"
+      class="intro scroll-target reveal-on-scroll"
       tabindex="-1"
       #scrollTargetElement
     >
-      <div class="intro__inner">
+      <div class="intro__inner reveal-on-scroll">
         <p>
           Diese Ausstellung führt durch fünf prägende Perspektiven auf das Menschenbild und verknüpft historische Kontexte mit aktuellen Fragen. Die Szenografie ist inspiriert von musealen Führungen: ruhige Übergänge, präzise Schlüsselideen, vergleichende Blickachsen.
         </p>
@@ -179,13 +179,13 @@
     <div id="philosopher-sections" class="philosopher-collection">
       <section
         *ngFor="let philosopher of philosophers; let index = index"
-        class="philosopher-section scroll-target"
+        class="philosopher-section scroll-target reveal-on-scroll"
         [attr.id]="philosopher.id"
         tabindex="-1"
         #scrollTargetElement
       >
         <div class="philosopher-inner">
-          <figure class="philosopher-figure">
+          <figure class="philosopher-figure reveal-on-scroll reveal-from-left">
             <img
               [src]="philosopher.portrait.thumb"
               [alt]="philosopher.portrait.alt"
@@ -198,7 +198,7 @@
             />
             <figcaption>{{ philosopher.portrait.caption }}</figcaption>
           </figure>
-          <div class="philosopher-content">
+          <div class="philosopher-content reveal-on-scroll reveal-from-right">
             <header class="philosopher-header">
               <h2>{{ philosopher.name }}</h2>
               <ng-container *ngIf="showExtendedContent">
@@ -214,16 +214,16 @@
               </ng-container>
             </header>
             <section
-              class="philosopher-profile"
+              class="philosopher-profile reveal-on-scroll"
               *ngIf="philosopher.profile as profile"
               aria-label="Steckbrief"
             >
-              <article class="profile-card profile-card--facts">
+              <article class="profile-card profile-card--facts reveal-on-scroll">
                 <p class="profile-label">Steckbrief</p>
                 <p class="profile-meta">{{ profile.birth }}</p>
                 <p class="profile-meta">{{ profile.death }}</p>
               </article>
-              <article class="profile-card profile-card--life">
+              <article class="profile-card profile-card--life reveal-on-scroll">
                 <p class="profile-label">Leben</p>
                 <ul class="profile-list">
                   <li *ngFor="let moment of profile.lifeEvents">
@@ -231,7 +231,7 @@
                   </li>
                 </ul>
               </article>
-              <article class="profile-card profile-card--ideas">
+              <article class="profile-card profile-card--ideas reveal-on-scroll">
                 <p class="profile-label">Grundidee</p>
                 <ul class="profile-list">
                   <li *ngFor="let core of profile.coreIdeas">
@@ -252,7 +252,7 @@
               </article>
             </section>
             <ng-container *ngIf="showExtendedContent">
-              <div class="philosopher-ideas">
+              <div class="philosopher-ideas reveal-on-scroll">
                 <h3>Hauptideen</h3>
                 <ul>
                   <li *ngFor="let idea of philosopher.ideas">
@@ -260,7 +260,7 @@
                   </li>
                 </ul>
               </div>
-              <blockquote class="philosopher-quote" *ngIf="philosopher.quote">
+              <blockquote class="philosopher-quote reveal-on-scroll" *ngIf="philosopher.quote">
                 „{{ philosopher.quote }}”
                 <cite *ngIf="philosopher.quoteSource">{{ philosopher.quoteSource }}</cite>
               </blockquote>
@@ -272,28 +272,28 @@
 
     <section
       id="vergleichen"
-      class="compare-section scroll-target"
+      class="compare-section scroll-target reveal-on-scroll"
       tabindex="-1"
       #scrollTargetElement
     >
-      <header class="section-header">
+      <header class="section-header reveal-on-scroll">
         <h2>Vergleichen</h2>
         <p class="section-subtitle">
           Ein schneller Blick auf Gemeinsamkeiten, Differenzen und kritische Hinweise.
         </p>
       </header>
 
-      <p class="compare-hint">
+      <p class="compare-hint reveal-on-scroll">
         Wähle {{ compareColumnCount }} Philosoph:innen für den Direktvergleich.
       </p>
 
       <div
-        class="compare-columns"
+        class="compare-columns reveal-on-scroll"
         [class.columns-2]="compareColumnCount === 2"
         [class.columns-3]="compareColumnCount === 3"
       >
         <article
-          class="compare-column"
+          class="compare-column reveal-on-scroll"
           *ngFor="let selection of visibleCompareSelections; let i = index; trackBy: trackCompareCard"
         >
           <div class="compare-select">
@@ -332,8 +332,8 @@
         </article>
       </div>
 
-      <div class="compare-specs" aria-live="polite">
-        <div class="spec-row" *ngFor="let row of compareRows">
+      <div class="compare-specs reveal-on-scroll" aria-live="polite">
+        <div class="spec-row reveal-on-scroll" *ngFor="let row of compareRows">
           <p class="spec-label">{{ row.label }}</p>
           <ng-container *ngIf="getRowSharedValue(row) as shared; else contrastRow">
             <div class="spec-shared">
