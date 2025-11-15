@@ -660,6 +660,13 @@ main {
   transform: scale(1.12);
 }
 
+@media (max-width: 600px) {
+  .philosopher-figure img.portrait-figure-kant {
+    transform: scale(1.25);
+    object-position: center 32%;
+  }
+}
+
 .philosopher-figure:hover img {
   filter: sepia(0.4) grayscale(0.05) contrast(1.05);
   transform: scale(1.04);

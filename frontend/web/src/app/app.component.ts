@@ -123,7 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Immanuel_Kant_%281724-1804%29_engraving.jpg/640px-Immanuel_Kant_%281724-1804%29_engraving.jpg',
         alt: 'Kupferstich von Immanuel Kant aus dem 18. Jahrhundert.',
         caption: 'Immanuel Kant · historischer Kupferstich',
-        className: 'portrait-real portrait-zoom portrait-zoom-strip'
+        className: 'portrait-real portrait-zoom portrait-zoom-strip portrait-figure-kant'
       },
       ideas: [
         'Kategorischer Imperativ als Prüfstein moralischer Handlungen.',
