@@ -32,6 +32,7 @@ export class LeaderboardComponent implements OnInit {
   reviewIndex = 0;
 
   ngOnInit(): void {
+    this.scrollToTop();
     this.load();
   }
 
@@ -123,5 +124,12 @@ export class LeaderboardComponent implements OnInit {
     }
     const prevIndex = Math.max(this.reviewIndex - 1, 0);
     this.reviewIndex = prevIndex;
+  }
+
+  private scrollToTop(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
 }

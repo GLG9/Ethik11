@@ -40,7 +40,7 @@
     <nav>
       <p class="heading">Quiz</p>
       <a routerLink="/quiz" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Fragen</a>
-      <a routerLink="/quiz/leaderboard" routerLinkActive="active">Leaderboard</a>
+      <a routerLink="/quiz/leaderboard" routerLinkActive="active" (click)="scrollToTopForNavigation()">Leaderboard</a>
       <p class="coming-soon" *ngIf="statusMessage">{{ statusMessage }}</p>
       <ul class="placeholder-list" *ngIf="metadata?.placeholders?.length">
         <li *ngFor="let placeholder of metadata?.placeholders">
@@ -197,7 +197,7 @@
         </ul>
       </div>
       <div class="confirm-actions">
-        <a class="primary" routerLink="/quiz/leaderboard">Zum Leaderboard</a>
+        <a class="primary" routerLink="/quiz/leaderboard" (click)="scrollToTopForNavigation()">Zum Leaderboard</a>
         <button type="button" class="ghost" (click)="restartQuiz()">Nochmal starten</button>
       </div>
     </section>

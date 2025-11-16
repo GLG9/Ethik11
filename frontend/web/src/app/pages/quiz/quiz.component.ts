@@ -197,6 +197,7 @@ export class QuizComponent implements OnInit, OnDestroy {
       return;
     }
     this.phase = 'confirm';
+    this.scrollPhaseToTop();
   }
 
   goBack(): void {
@@ -253,6 +254,7 @@ export class QuizComponent implements OnInit, OnDestroy {
           this.timerMs = response.result.timeMs;
           this.phase = 'submitted';
           this.clearQuestionScrollTimer();
+          this.scrollPhaseToTop();
         },
         error: () => {
           this.phase = 'confirm';
@@ -260,6 +262,7 @@ export class QuizComponent implements OnInit, OnDestroy {
           this.storageInfo = null;
           this.submittedReview = [];
           this.submittedReviewIndex = 0;
+          this.scrollPhaseToTop();
         },
       });
   }
@@ -323,6 +326,14 @@ export class QuizComponent implements OnInit, OnDestroy {
       return;
     }
     this.submittedReviewIndex -= 1;
+  }
+
+  scrollToTopForNavigation(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const behavior: ScrollBehavior = this.prefersReducedMotion ? 'auto' : 'smooth';
+    window.scrollTo({ top: 0, behavior });
   }
 
   loadQuestions(): void {
@@ -427,6 +438,36 @@ export class QuizComponent implements OnInit, OnDestroy {
     const targetTop = target.getBoundingClientRect().top + window.scrollY;
     const top = Math.max(targetTop - offset - 12, 0);
     window.scrollTo({ top, behavior });
+  }
+
+  private scrollPhaseToTop(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    const behavior: ScrollBehavior = this.prefersReducedMotion ? 'auto' : 'smooth';
+    const target =
+      this.phase === 'submitted'
+        ? (document.querySelector('.state-card.success') as HTMLElement | null)
+        : (document.querySelector('.state-card.confirm') as HTMLElement | null);
+    const fallback =
+      (document.querySelector('.quiz-content') as HTMLElement | null) ||
+      (document.querySelector('.quiz-shell') as HTMLElement | null);
+    const element = target ?? fallback;
+    if (!element) {
+      window.scrollTo({ top: 0, behavior });
+      return;
+    }
+    const offset = this.getStickyHeaderOffset() + this.getQuizHeaderOffset() + 24;
+    const top = Math.max(element.getBoundingClientRect().top + window.scrollY - offset, 0);
+    window.scrollTo({ top, behavior });
+  }
+
+  private getQuizHeaderOffset(): number {
+    const quizHeader = document.querySelector('.quiz-header') as HTMLElement | null;
+    if (!quizHeader) {
+      return 0;
+    }
+    return quizHeader.getBoundingClientRect().height;
   }
 
   private shouldAutoScroll(): boolean {
