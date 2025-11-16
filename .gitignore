@@ -16,6 +16,9 @@ db/sqlite/db.sqlite3
 .env.*
 *.log
 .venv*
+rag_service/cache/
+.python310/
+.python312/
 
 # System files
 .DS_Store

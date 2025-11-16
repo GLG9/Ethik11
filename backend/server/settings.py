@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -138,12 +139,22 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^http://(?:\d{1,3}\.){3}\d{1,3}:4200$',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
+def _env_list(name: str) -> list[str]:
+    raw = os.environ.get(name, '')
+    return [entry.strip() for entry in raw.split(',') if entry.strip()]
+
+
+EXTRA_ORIGINS = _env_list('FRONTEND_ORIGINS')
+
+CORS_ALLOWED_ORIGINS = list({*CORS_ALLOWED_ORIGINS, *EXTRA_ORIGINS})
+
+CSRF_TRUSTED_ORIGINS = list({
     'http://localhost:4200',
     'http://127.0.0.1:4200',
     'http://*.local:4200',
     'http://*.lan:4200',
-]
+    *EXTRA_ORIGINS,
+})
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [

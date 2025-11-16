@@ -7,6 +7,8 @@ cd "${MODELS_DIR}"
 
 export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
 
+GPT_OSS_LOCAL_PATH="${GPT_OSS_LOCAL_PATH:-$MODELS_DIR/quantized/gpt-oss-20b}"
+
 resolve_model_id() {
   local candidate="$1"
   if [[ -n "${BASE_MODEL_HF:-}" ]]; then
@@ -21,6 +23,14 @@ resolve_model_id() {
   fi
 
   case "${candidate}" in
+    gpt-oss:20b|gpt-oss-20b)
+      if [[ -n "${GPT_OSS_LOCAL_PATH}" && -d "${GPT_OSS_LOCAL_PATH}" ]]; then
+        echo "${GPT_OSS_LOCAL_PATH}"
+      else
+        echo "gpt-oss/gpt-oss-llama-3.1-20b-instruct"
+      fi
+      return
+      ;;
     deepseek-r1:7b|deepseek-r1-7b|deepseek-r1)
       local default_awq="${MODELS_DIR}/quantized/deepseek-r1-7b-awq"
       if [[ -d "${default_awq}" ]]; then
@@ -44,7 +54,7 @@ resolve_model_id() {
   echo "${candidate}"
 }
 
-MODEL_ID="${MODEL_ID:-deepseek-r1:7b}"
+MODEL_ID="${MODEL_ID:-gpt-oss:20b}"
 RESOLVED_MODEL_ID="$(resolve_model_id "${MODEL_ID}")"
 HOST="${HOST:-127.0.0.1}"
 PORT="${PORT:-9000}"
@@ -131,14 +141,11 @@ if [[ "${IS_PERSONA}" -eq 0 ]]; then
     path="${MODELS_DIR}/out/${name}_lora"
     if [[ -d "${path}" ]]; then
       LORA_ARGS+=("${name}=${path}")
-    else
-      echo "WARN: Adapter-Verzeichnis ${path} fehlt – ${name} wird nicht geladen." >&2
     fi
   done
 
   if [[ ${#LORA_ARGS[@]} -eq 0 ]]; then
-    echo "ERROR: Keine LoRA-Adapter gefunden. Bitte zuerst trainieren." >&2
-    exit 1
+    echo "INFO: Keine LoRA-Adapter gefunden – starte Basismodell ohne LoRA."
   fi
 fi
 
@@ -174,7 +181,7 @@ CMD=(vllm serve "${RESOLVED_MODEL_ID}"
   --served-model-name "${MODEL_ID}"
 )
 
-if [[ "${IS_PERSONA}" -eq 0 ]]; then
+if [[ "${IS_PERSONA}" -eq 0 && ${#LORA_ARGS[@]} -gt 0 ]]; then
   CMD+=(--enable-lora --lora-modules "${LORA_ARGS[@]}" --max-loras 1 --max-cpu-loras 0)
 fi
 

@@ -7,6 +7,8 @@ FRONTEND_DIR="$ROOT_DIR/frontend/web"
 SQLITE_DIR="$ROOT_DIR/db/sqlite"
 MODELS_DIR="$ROOT_DIR/models"
 VLLM_SCRIPT="$ROOT_DIR/models/scripts/serve_vllm.sh"
+ROOT_ENV_FILE="$ROOT_DIR/.env"
+BACKEND_ENV_FILE="$BACKEND_DIR/.env"
 
 BACKEND_PID=""
 FRONTEND_PID=""
@@ -15,6 +17,21 @@ VLLM_PID=""
 log() {
   echo "[ethik-start] $*"
 }
+
+load_env_file() {
+  local file="$1"
+  if [[ -f "$file" ]]; then
+    log "Lade Umgebungsvariablen aus ${file}..."
+    # shellcheck disable=SC1090
+    set -a
+    source "$file"
+    set +a
+  fi
+}
+
+for env_candidate in "$ROOT_ENV_FILE" "$BACKEND_ENV_FILE" "$ROOT_DIR/../backend/.env"; do
+  load_env_file "$env_candidate"
+done
 
 cleanup() {
   trap - INT TERM EXIT

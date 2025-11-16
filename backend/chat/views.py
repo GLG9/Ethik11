@@ -5,22 +5,27 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-import re
 
 import httpx
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from .chatki import call_chatki_completion, chatki_is_configured
+from .rag import RAG_ENABLED, build_context_for_query
+from .utils import sanitize_plain_text
+
 MODEL_PORTS_PATH = Path(__file__).resolve().parent / 'model_ports.json'
 
 DEFAULT_CHAT_BASE_URL = os.environ.get('CHAT_COMPLETIONS_URL', 'http://127.0.0.1:9000/v1/chat/completions')
 REQUEST_TIMEOUT = float(os.environ.get('CHAT_REQUEST_TIMEOUT', '60'))
+DEFAULT_MODEL_NAME = os.environ.get('CHAT_MODEL_NAME', 'gpt-oss:20b')
 GERMAN_GUARDRAIL = (
     'Antworte ausschließlich auf Deutsch, klar und prägnant, höchstens vier Sätze. '
     'Liefere nur den finalen Antworttext, ohne Meta-Kommentare, ohne innere Gedanken '
     'und ohne Tags wie <think>.'
 )
 FALLBACK_REPLY = 'Ich konnte gerade keine Antwort erzeugen. Bitte versuche es erneut.'
+CHATKI_ACTIVE = chatki_is_configured()
 
 def build_timeout() -> httpx.Timeout:
     base_timeout = REQUEST_TIMEOUT if REQUEST_TIMEOUT > 0 else None
@@ -77,14 +82,6 @@ def extract_reply(payload: dict[str, Any]) -> str:
     return json.dumps(payload, ensure_ascii=False)
 
 
-def strip_reasoning(text: str) -> str:
-    """Remove completed <think> blocks and trailing fragments before </think>."""
-    cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
-    if '</think>' in cleaned:
-        cleaned = cleaned.split('</think>')[-1]
-    return cleaned
-
-
 def build_payload(persona: str, body: dict[str, Any]) -> ChatPayload:
     messages = body.get('messages')
     if not isinstance(messages, list) or not messages:
@@ -102,8 +99,21 @@ def build_payload(persona: str, body: dict[str, Any]) -> ChatPayload:
 
     controlled_messages = [{'role': 'system', 'content': GERMAN_GUARDRAIL}, *messages]
 
+    rag_context = maybe_build_rag_context(persona, messages)
+    if rag_context:
+        controlled_messages.append(
+            {
+                'role': 'system',
+                'content': (
+                    'Nutze zwingend die folgenden Fakten aus der Kurationsdatenbank. '
+                    'Wenn der Kontext Fragen beantwortet, zitiere ihn knapp und bleibe bei der Persona.'
+                    f'\n{rag_context}'
+                )
+            }
+        )
+
     return ChatPayload(
-        model=persona,
+        model=DEFAULT_MODEL_NAME,
         messages=controlled_messages,
         temperature=temperature,
         max_tokens=max_tokens if isinstance(max_tokens, int) and max_tokens > 0 else None,
@@ -117,9 +127,19 @@ def call_completion(payload: ChatPayload) -> dict[str, Any]:
         return response.json()
 
 
-def sanitize_plain_text(text: str) -> str:
-    cleaned = strip_reasoning(text).strip()
-    return cleaned
+def maybe_build_rag_context(persona: str, messages: list[dict[str, Any]]) -> str:
+    if not RAG_ENABLED or not messages:
+        return ''
+    last_user = next(
+        (message for message in reversed(messages) if message.get('role') == 'user'),
+        None
+    )
+    if not last_user:
+        return ''
+    prompt = last_user.get('content')
+    if not isinstance(prompt, str) or not prompt.strip():
+        return ''
+    return build_context_for_query(persona, prompt.strip())
 
 
 @csrf_exempt
@@ -143,7 +163,16 @@ def chat_stream(request: HttpRequest, who: str):
         return JsonResponse({'detail': str(exc)}, status=400)
 
     try:
-        raw_response = call_completion(chat_payload)
+        if CHATKI_ACTIVE:
+            raw_response = call_chatki_completion(
+                persona=persona,
+                messages=chat_payload.messages,
+                temperature=chat_payload.temperature,
+                max_tokens=chat_payload.max_tokens,
+                timeout=build_timeout(),
+            )
+        else:
+            raw_response = call_completion(chat_payload)
         reply = extract_reply(raw_response)
         return JsonResponse(
             {

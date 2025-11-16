@@ -1127,23 +1127,39 @@ button:focus-visible {
   }
 
   .compare-section {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: clamp(0.35rem, 3.5vw, 0.65rem);
+    padding-right: clamp(0.35rem, 3.5vw, 0.65rem);
   }
 
   .compare-column {
-    padding: 1.1rem 0.9rem 1.25rem;
+    padding: clamp(0.65rem, 2.5vw, 0.9rem);
+    border-radius: calc(var(--radius) + 2px);
   }
 
   .compare-columns {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.85rem;
+    gap: clamp(0.4rem, 2.5vw, 0.65rem);
+  }
+
+  .compare-meta {
+    gap: 0.35rem;
+  }
+
+  .spec-row {
+    padding: clamp(0.85rem, 3vw, 1.1rem);
+    border-radius: calc(var(--radius) + 2px);
   }
 
   .spec-columns {
-    gap: 0.85rem;
+    gap: clamp(0.4rem, 2.5vw, 0.65rem);
+  }
+
+  .spec-entry {
+    padding: clamp(0.75rem, 3vw, 1rem);
+    min-height: auto;
   }
 }
 
