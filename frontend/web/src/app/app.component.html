@@ -190,13 +190,7 @@
               <h2>{{ philosopher.name }}</h2>
               <ng-container *ngIf="showExtendedContent">
                 <p class="philosopher-vita">
-                  Lebensdaten: {{ philosopher.life }}<ng-container *ngIf="philosopher.epoch"> • Epoche: {{ philosopher.epoch }}</ng-container>
-                </p>
-                <p class="philosopher-abstract">
-                  {{ philosopher.summary }}
-                </p>
-                <p class="philosopher-highlight" *ngIf="philosopher.keyline">
-                  {{ philosopher.keyline }}
+                  Lebensdaten: {{ philosopher.life }}
                 </p>
               </ng-container>
             </header>
@@ -310,10 +304,7 @@
               <p class="compare-name">{{ philosopher.name }}</p>
               <p class="compare-life">
                 {{ philosopher.life }}
-                <ng-container *ngIf="philosopher.epoch">· {{ philosopher.epoch }}</ng-container>
               </p>
-              <p class="compare-summary">{{ philosopher.summary }}</p>
-              <p class="compare-highlight" *ngIf="philosopher.keyline">{{ philosopher.keyline }}</p>
             </div>
           </ng-container>
         </article>

@@ -97,15 +97,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         birth: '* 4. September 1892 (Wiesbaden)',
         death: '† 12. Juni 1985 (Göttingen)',
         lifeEvents: [
-          'Einleitung in die philosophische Anthropologie“',
-          '➔ „exzentrische Positionalität“',
-          '- wegen jüdischem Vaterhaus in wurde er in der NS-Zeit nach Istanbul vertrieben',
-          '- Rückkehr nach Kriegsende',
-          '- Lehrte dann in New York, Zürich und verfasste bis 1975 Essays,… zur Philosophie'
+          'studierte ab 1910 zunächst Medizin und Zoologie',
+          'wandte sich ab 1916 zunehmend der Philosophie zu',
+          '1928 erschien sein Hauptwerk „Die Stufen des Organischen und der Mensch. Einleitung in die philosophische Anthropologie“ mit dem Konzept der „exzentrischen Positionalität“',
+          'wegen seines jüdischen Elternhauses wurde er in der NS-Zeit nach Istanbul vertrieben',
+          'Rückkehr nach Kriegsende',
+          'lehrte anschließend in New York und Zürich und veröffentlichte bis 1975 zahlreiche philosophische Essays'
         ],
         coreIdeas: [
-          '- kann sich von außen (objektiv) und von innen (subjektiv) betrachten',
-          '- Mensch besitzt „exzentrische Positionalität“'
+          'Mensch besitzt „exzentrische Positionalität“',
+          'kann sich von außen (objektiv) und von innen (subjektiv) betrachten'
         ],
         references: [
           {
@@ -145,17 +146,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         birth: '* 5. Mai 1818 (Trier)',
         death: '† 14. März 1883 (London)',
         lifeEvents: [
-          '- studiert 1835 Rechtswissenschaften',
-          '- 1836-1841 studiert er zusätzlich Philosophie',
-          '- trifft 1842 Friedrich Engels in Köln',
-          '- Marx und Engels verfassen 1847 eine „Schrift für die Reorganisation des Bundes“',
-          '- „Manifest der Kommunistischen Partei“ 1848 veröffentlicht',
-          '- 1859 veröffentlicht er seine Kritik zum Kapitalismus',
-          '- Arbeit bei zahlreichen Zeitschriften und verfasste weitere Texte seiner kommunistischen Idee'
+          'studierte ab 1835 Rechtswissenschaften',
+          'erweiterte 1836-1841 sein Studium um die Philosophie',
+          'traf 1842 Friedrich Engels in Köln',
+          'verfasste 1847 mit Engels eine Schrift zur Reorganisation des Bundes',
+          'veröffentlichte 1848 das „Manifest der Kommunistischen Partei“',
+          'legte 1859 seine Kritik des Kapitalismus vor',
+          'arbeitete bei zahlreichen Zeitschriften und schrieb weitere Texte seiner kommunistischen Idee'
         ],
         coreIdeas: [
-          '- Der Mensch kann sich nur durch Arbeit verwirklichen',
-          '- er entfremdet sich durch den Kapitalismus von der Arbeit'
+          'der Mensch kann sich nur durch Arbeit verwirklichen',
+          'er entfremdet sich durch den Kapitalismus von der Arbeit'
         ],
         references: [
           {
@@ -193,18 +194,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         birth: '*22. April 1724 (Königsberg)',
         death: '† 12. Februar 1804 (Königsberg)',
         lifeEvents: [
-          'Mensch?',
-          '- Aufklärung auf ihn zurückzuführen',
-          '- begann 1740 mit dem Philosophie-Studium',
-          '- arbeitete 10 Jahre als Hauslehrer und setzte dann sein Studium fort',
-          '- 1754 verfasste er erstes wichtigstes Werk „Allgemeine Naturgeschichte und Theorie des Himmels“ über die eigentliche Größe des Universums.',
-          '- Arbeitete ab 1770 als Professor für Logik und Metaphysik in Königsberg',
-          '- 1781 vermutlich wichtigstes Werk „Kritik der reinen Vernunft“ veröffentlich',
-          '➔ Was kann ich wissen? Was soll ich tun? Was darf ich hoffen? Was ist der'
+          'begann 1740 mit dem Philosophie-Studium',
+          'arbeitete zehn Jahre als Hauslehrer und setzte dann sein Studium fort',
+          'verfasste 1754 sein erstes wichtiges Werk „Allgemeine Naturgeschichte und Theorie des Himmels“ über die Größe des Universums',
+          'arbeitete ab 1770 als Professor für Logik und Metaphysik in Königsberg',
+          'veröffentlichte 1781 sein zentrales Werk „Kritik der reinen Vernunft“ mit den Fragen „Was kann ich wissen? Was soll ich tun? Was darf ich hoffen? Was ist der Mensch?“',
+          'Aufklärungsdenken ist maßgeblich auf ihn zurückzuführen'
         ],
         coreIdeas: [
-          '- Der Mensch ist ein „ungeselliger Geselle“',
-          '- er steht zwischen seinem Egoismus und der Gesellschaft, diese Spannung nennt er Antagonismus'
+          'der Mensch ist ein „ungeselliger Geselle“',
+          'er steht zwischen seinem Egoismus und der Gesellschaft; diese Spannung nennt er Antagonismus'
         ],
         references: [
           {
@@ -245,15 +244,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         birth: '*29. Januar 1904 (Leipzig)',
         death: '† 30. Januar 1976 (Hamburg)',
         lifeEvents: [
-          '- Studium Philosophie, Germanistik, Psychologie und Kunstgeschichte bis 1927',
-          '- ab 1930 bis 1934 Privatdozent für Philosophie in Leipzig',
-          '- Eintritt in NSDAP 1933',
-          '- von 1934 bis 1969 ordentlicher Professor für Philosophie und Soziologie in zahlreichen Städten (Leipzig, Kaliningrad, Wien, Aachen)',
-          '- war von Untersuchungsverfahren im Rahmen der Entnazifizierung betroffen'
+          'studierte bis 1927 Philosophie, Germanistik, Psychologie und Kunstgeschichte',
+          'war 1930 bis 1934 Privatdozent für Philosophie in Leipzig',
+          'trat 1933 der NSDAP bei',
+          'lehrte 1934 bis 1969 als ordentlicher Professor für Philosophie und Soziologie in Leipzig, Kaliningrad, Wien und Aachen',
+          'wurde in Entnazifizierungsverfahren überprüft'
         ],
         coreIdeas: [
-          '- der Mensch ist ein „Mängelwesen“',
-          '- er ist nicht durch spezielle Organe und Instinkte an Umwelt angepasst'
+          'der Mensch ist ein „Mängelwesen“',
+          'er ist nicht durch spezielle Organe und Instinkte an Umwelt angepasst'
         ],
         references: [
           {
@@ -289,15 +288,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         birth: '*9. Januar 1897 (München)',
         death: '† 25. Mai 1973 (Heidelberg)',
         lifeEvents: [
-          '- geriet nach dem Abitur in italienische Kriegsgefangenschaft',
-          '- Rückkehr 1919 und Beginn eines Philosophie- und Biologie-Studiums bis 1922',
-          '- als Jude 1934 nach Rom ausgewandert, später 1936 als Professor an japan. Universität',
-          '- kam 1952 nach Deutschland zurück nachdem er noch 11 Jahre in den USA tätig war',
-          '- bis 1964 lehrte er an der Universität in Heidelberg und veröffentlichte weitere philosophische Schriften'
+          'geriet nach dem Abitur in italienische Kriegsgefangenschaft',
+          'Rückkehr 1919 und Beginn eines Philosophie- und Biologie-Studiums bis 1922',
+          'wanderte 1934 als Jude nach Rom aus und wurde 1936 Professor an einer japanischen Universität',
+          'kam 1952 nach Deutschland zurück, nachdem er elf Jahre in den USA tätig war',
+          'lehrte bis 1964 an der Universität Heidelberg und veröffentlichte weitere philosophische Schriften'
         ],
         coreIdeas: [
-          '- der Mensch ist ein „Kulturwesen“',
-          '- er ist ein Teil der Natur, kann sie „erkennen“ und hinterfragen, wodurch er sich jedoch von ihr entfremdet'
+          'der Mensch ist ein „Kulturwesen“',
+          'er ist ein Teil der Natur, kann sie „erkennen“ und hinterfragen, wodurch er sich jedoch von ihr entfremdet'
         ],
         references: [
           {
