@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 type SourceLink = {
   label?: string;
@@ -18,7 +18,7 @@ type SourceSection = {
   templateUrl: './impressum.component.html',
   styleUrl: './impressum.component.scss',
 })
-export class ImpressumComponent {
+export class ImpressumComponent implements OnInit {
 
   readonly responsiblePersons = ['Gian Luca Gissy', 'Jasper Junge', 'Noah Kauter', 'Oscar Schulenburg'];
 
@@ -179,4 +179,11 @@ export class ImpressumComponent {
       ],
     },
   ];
+
+  ngOnInit(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
 }
