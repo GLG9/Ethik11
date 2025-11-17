@@ -59,15 +59,15 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     id: HERO_ARTICLE_ID,
     philosopher: 'marx',
     kicker: 'Aktuelles · Karl Marx',
-    title: '„Flughafen liegt Lahm – Warnstreiks im Frühjahr 2025“',
+    title: '„Flughafen liegt lahm – Warnstreiks im Frühjahr 2025“',
     teaser:
-      'Zwischen März und Mai waren viele Flughafen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
+      'Zwischen März und Mai waren viele Flughäfen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
     heroLead:
-      'Zwischen März und Mai waren viele Flughafen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
+      'Zwischen März und Mai waren viele Flughäfen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
     body: [
-      'Zwischen März und Mai waren viele Flughafen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
+      'Zwischen März und Mai waren viele Flughäfen, aber auch andere öffentliche Bereiche und Einrichtungen von Warnstreiks betroffen.',
       'Es wurden nach ver.di „[…] bessere Arbeitsbedingungen, mehr Freizeit und eine angemessene Bezahlung für alle Beschäftigten im öffentlichen Dienst von Bund und Kommunen [gefordert]. Dazu gehören auch wir – Tausende Kolleg*innen, die tagtäglich den Luftverkehr am Laufen halten.“',
-      'Dies zeigt Karl Marx´ Entfremdung du die Ausbeutung im Kapitalismus.',
+      'Dies zeigt Karl Marx´ Entfremdung durch die Ausbeutung im Kapitalismus.',
       'Die Menschen fordern bessere Arbeitsbedingungen, da diese nicht vom Arbeitgeber, dem Kapitalisten, beachtet werden.',
     ],
     image: {
@@ -79,15 +79,15 @@ export const NEWS_ARTICLES: NewsArticle[] = [
   {
     id: 'plessner-1',
     philosopher: 'plessner',
-    kicker: 'Aktuelles · Helmut Pleßner',
+    kicker: 'Aktuelles · Helmuth Pleßner',
     title: '„Social Media verzerrt Selbstbild“',
     teaser:
       'Durch den massiven Zuwachs der Social Media Nutzung nehmen immer mehr (junge) Menschen Fotos und Videos von sich auf.',
     body: [
       'Durch den massiven Zuwachs der Social Media Nutzung nehmen immer mehr (junge) Menschen Fotos und Videos von sich auf.',
       'Dabei machen sie sich dauerhaft Gedanken darüber, wie das Bild bei anderen ankommen könnte, wie kommentiert wird und ob anderen der Beitrag gefällt.',
-      'Sie reflektieren sich also, wie Pleßner sagt, von außen und können danach handeln, indem sie zum Beispiel Filter oder andere Veränderungen aufsetzten, um das Bild und damit die Wahrnehmung zu verzerren.',
-      'Sie reflektieren sich, hinterfragen das Handeln anderer und planen dabei die Zukunft, da sie bestimmt Reaktionen erwarten.',
+      'Sie reflektieren sich also, wie Pleßner sagt, von außen und können danach handeln, indem sie zum Beispiel Filter oder andere Veränderungen aufsetzen, um das Bild und damit die Wahrnehmung zu verzerren.',
+      'Sie reflektieren sich, hinterfragen das Handeln anderer und planen dabei die Zukunft, da sie bestimmte Reaktionen erwarten.',
       'Damit entsprechen sie der „exzentrischen Positionalität“ von Pleßner.',
     ],
     image: {
@@ -98,7 +98,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
   {
     id: 'plessner-2',
     philosopher: 'plessner',
-    kicker: 'Aktuelles · Helmut Pleßner',
+    kicker: 'Aktuelles · Helmuth Pleßner',
     title: '„Emotionales Konzert“',
     teaser: 'Ein Musiker ist ein Mensch und hat nach Pleßner einen Innen- und einen Außenaspekt.',
     body: [
@@ -143,10 +143,10 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Die Schule ist eine Institution, die das Leben eines jeden Kindes und Jugendlichen prägt.',
     body: [
       'Die Schule ist eine Institution, die das Leben eines jeden Kindes und Jugendlichen prägt.',
-      'Nach dem Schulgesetz Berlin solle die Schule Kenntnisse, Fähigkeiten, Fertigkeiten und Werthaltungen vermitteln.',
+      'Nach dem Schulgesetz Berlin soll die Schule Kenntnisse, Fähigkeiten, Fertigkeiten und Werthaltungen vermitteln.',
       'Dadurch vereinfacht sie es den Kindern und Jugendlichen, die Herausforderungen des sozialen und kulturellen Lebens zu meistern.',
       'Dies entspricht der Vorstellung einer Institution von Gehlen.',
-      'Sie lehrt den Menschen Verhaltensweise und Fähigkeiten, die er braucht, um seine Mängel zu kompensieren.',
+      'Sie lehrt den Menschen Verhaltensweisen und Fähigkeiten, die er braucht, um seine Mängel zu kompensieren.',
       'Die Schule gibt damit schon früh eine Struktur vor und stabilisiert das Zusammenleben mit Normen, Werten und Regeln.',
       'Diese Funktion einer Institution ist nach Gehlen der entscheidende Faktor für den Ausgleich der Mängel und Instinktarmut.',
       'Zum Beispiel werden Dinge wie Hilfsbereitschaft, Zielstrebigkeit, aber auch Interaktion mit anderen trainiert.',
@@ -172,10 +172,10 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Er beginnt, sich seine Zukunft und Entwicklung zu planen und nutzt seinen vorstellenden Willen.',
       'Doch der Mensch „kennt“ die Natur nicht einfach.',
       'Er weiß, welche Folgen seine Handlungen für die Natur haben und kann diese reflektieren.',
-      'Das führt bei vielen Menschen dazu, dass sie versuchen zwischen der Entfremdung von der Natur und den Folgen davon eine Balance zu finden.',
+      'Das führt bei vielen Menschen dazu, dass sie versuchen, zwischen der Entfremdung von der Natur und den Folgen davon eine Balance zu finden.',
       'Sie sind sich der Tatsache bewusst, dass die Menschen die Natur zerstören und handeln danach mit ihrem Willen, um zum Beispiel auf Demonstrationen wie Fridays for Future dagegen vorzugehen.',
       'Zusammenfassend ist der Mensch immer noch den Naturgesetzen ausgeliefert und somit selbst vom Klimawandel direkt betroffen.',
-      'Die Kultur sagt ihm, dass er in Form von Demonstrationen dagegen vorgehen kann, denn der Mensch erkennt das er auch ein Teil der Natur ist, wenn auch nicht wie ein Tier.',
+      'Die Kultur sagt ihm, dass er in Form von Demonstrationen dagegen vorgehen kann, denn der Mensch erkennt, dass er auch ein Teil der Natur ist, wenn auch nicht wie ein Tier.',
     ],
     image: {
       src: 'https://images.unsplash.com/photo-1569060368645-4ab30c8d8b0e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZnJpZGF5cyUyMGZvciUyMGZ1dHVyZXxlbnwwfHwwfHx8MA%3D%3D',
@@ -193,7 +193,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Während Tiere Instinkte haben und jagen gehen, wenn sie das Bedürfnis nach Nahrung haben, hat der Mensch diesen Instinkt und die Möglichkeit zur Jagd ohne Hilfsmittel nicht.',
       'Er braucht Kultur, so wie Löwith es behauptet.',
       'Der Mensch geht nicht jagen, sondern er geht gesittet einkaufen, der ein oder andere vielleicht sogar an konkreten Tagen, er hat also ein Ritual.',
-      'Das Jagen zum Beispiel wird ihm dabei von der Kultur übernommen: es gibt spezielle Einrichtungen für Fleischindustrie (Massentierhaltung), die den Instinktmangel und die Körperlichen Mängel des Menschen ausgleichen.',
+      'Das Jagen zum Beispiel wird ihm dabei von der Kultur übernommen: es gibt spezielle Einrichtungen für Fleischindustrie (Massentierhaltung), die den Instinktmangel und die körperlichen Mängel des Menschen ausgleichen.',
       'Der Mensch ist also durch die Kultur und deren Bereiche angepasst, und kommt nur so an Fleisch.',
     ],
     image: {
@@ -207,14 +207,14 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     kicker: 'Aktuelles · Immanuel Kant',
     title: '„Corona Impfstoff – Streit oder Zusammenarbeit?“',
     teaser:
-      'Die Debatte um den Corona-Impfstoff in der Pandemie 2020 -2023 – Welcher Impfstoff ist der beste?',
+      'Die Debatte um den Corona-Impfstoff in der Pandemie 2020-2023 – Welcher Impfstoff ist der beste?',
     body: [
-      'Die Debatte um den Corona-Impfstoff in der Pandemie 2020 -2023 – Welcher Impfstoff ist der beste? Welcher Impfstoff ist am schnellsten auf dem Markt?',
+      'Die Debatte um den Corona-Impfstoff in der Pandemie 2020-2023 – Welcher Impfstoff ist der beste? Welcher Impfstoff ist am schnellsten auf dem Markt?',
       'Dieses Beispiel spiegelt den „ungeselligen Gesellen“ nach Kant sehr gut wider.',
       'Diese Fragen stellten sich viele Menschen, da selbst große Ungewissheit herrschte, welche Auswirkungen eine Impfung haben könnte und auch Gerüchte über negative Folgen bestimmter Impfstoffe präsent waren.',
       'Zum einen ist der Mensch bzw. der Arbeiter der Impfstoff-Hersteller ungesellig, denn jede Firma war darauf bedacht, den besten Impfstoff herzustellen, um Anerkennung zu bekommen.',
       'Sie waren jedoch gleichzeitig gesellig, da die Firmen gezwungen waren, kooperativ Forschungsergebnisse auszutauschen, um das gemeinsame Ziel, die Überwindung der Pandemie zu erreichen.',
-      'Hier wird deutlich das der Mensch zum einen für sich arbeitet und egoistisch ist, zum anderen aber die Gesellschaft und andere braucht, um ein Ziel zu erreichen.',
+      'Hier wird deutlich, dass der Mensch zum einen für sich arbeitet und egoistisch ist, zum anderen aber die Gesellschaft und andere braucht, um ein Ziel zu erreichen.',
     ],
     image: {
       src: 'https://images.unsplash.com/photo-1611694449252-02453c27856a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1wZnN0b2ZmfGVufDB8fDB8fHww',
@@ -226,14 +226,14 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     philosopher: 'kant',
     kicker: 'Aktuelles · Immanuel Kant',
     title: '„Ukraine-Krieg“',
-    teaser: 'Der Ukraine Krieg ist insofern ein Beispiel für den „ungeselligen Gesellen“, dass auch hier deutlich wird, dass der Mensch im Zwiespalt steht.',
+    teaser: 'Der Ukraine-Krieg ist insofern ein Beispiel für den „ungeselligen Gesellen“, dass auch hier deutlich wird, dass der Mensch im Zwiespalt steht.',
     body: [
-      'Der Ukraine Krieg ist insofern ein Beispiel für den „ungeselligen Gesellen“, dass auch hier deutlich wird, dass der Mensch im Zwiespalt steht.',
+      'Der Ukraine-Krieg ist insofern ein Beispiel für den „ungeselligen Gesellen“, dass auch hier deutlich wird, dass der Mensch im Zwiespalt steht.',
       'Putin lehnt es ab, sich internationalen Bündnissen bzw. Institutionen unterzuordnen, da es die Macht beeinträchtigen könnte.',
       'Er kommuniziert zudem nur sehr begrenzt mit anderen Staaten.',
       'Er ist also sehr ungesellig, gar egoistisch, da er nur seine eigene Macht sieht.',
       'Auf der anderen Seite ist er auch ein wenig gesellig, denn Russland ist auf internationalen Handel angewiesen, was ihn zur Kommunikation und zur Gemeinschaft zwingt.',
-      'Also trotz dessen, dass Russland seine Macht sichern underweitern möchte, muss es in den internationalen Kontakt treten, um seine Existenz zu sichern.',
+      'Also trotz dessen, dass Russland seine Macht sichern und erweitern möchte, muss es in den internationalen Kontakt treten, um seine Existenz zu sichern.',
     ],
     image: {
       src: 'https://images.unsplash.com/photo-1647273426587-31512cdf2e50?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a3JpZWclMjB1a3JhaW5lfGVufDB8fDB8fHww',

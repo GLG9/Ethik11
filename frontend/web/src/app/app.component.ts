@@ -322,9 +322,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       label: '(1) Wesen/Eigenschaften des Menschen',
       values: {
         marx:
-          '- Mensch ist produktiv, sozial und ein Gattungswesen, dass Gesellschaft braucht\n- er verwirklicht sich durch gewollte Arbeit\n- gestaltet die Welt und drückt sich über sein Produkt aus\n- wird im Kapitalismus von der Arbeit entfremdet',
+          '- Mensch ist produktiv, sozial und ein Gattungswesen, das Gesellschaft braucht\n- er verwirklicht sich durch gewollte Arbeit\n- gestaltet die Welt und drückt sich über sein Produkt aus\n- wird im Kapitalismus von der Arbeit entfremdet',
         plessner:
-          '- Mensch ist ein Grenzwesen zwischen Natur und Kultur\n- er besitzt „exzentrische Positionlität“\n- hat Doppelaspektivität zwischen Leib und Körper\n- reflektiert die Vergangenheit und plant die Zukunft objektiv',
+          '- Mensch ist ein Grenzwesen zwischen Natur und Kultur\n- er besitzt „exzentrische Positionalität“\n- hat Doppelaspektivität zwischen Leib und Körper\n- reflektiert die Vergangenheit und plant die Zukunft objektiv',
         loewith:
           '- Mensch ist ein Kulturwesen\n- er „erkennt“ die Natur und distanziert sich\n- schafft Kultur um Instinktmangel auszugleichen\n- ist von Naturgesetzen abhängig, lebt aber in Kultur',
         gehlen:
@@ -343,7 +343,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         loewith:
           '- Tiere „kennen“ ihre Natur (ohne Reflexion)\n- Mensch „erkennt“ seine Natur (mit Reflexion)\n- Tiere leben unmittelbar in der Natur, aber Mensch distanziert sich durch Kultur',
         gehlen:
-          '- Tiere folgen ausschließlich ihren Instinkten uns sind spezialisiert\n- Mensch hat Instinktschwäche, ist unspezialisiert und unsicher/orientierungslos\n- Mensch muss künstlich überleben',
+          '- Tiere folgen ausschließlich ihren Instinkten und sind spezialisiert\n- Mensch hat Instinktschwäche, ist unspezialisiert und unsicher/orientierungslos\n- Mensch muss künstlich überleben',
         kant:
           '- Mensch hat eine Doppelnatur: gesellig und ungesellig\n- nur Menschen haben Moral und Vernunft\n- Mensch strebt nach Fortschritt und Weiterentwicklung'
       }
@@ -352,11 +352,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       label: '(3) Bedeutung der Natur/Umwelt',
       values: {
         marx:
-          '- ist der Raum in der der Mensch seine Arbeit verrichtet\n- Natur und Umwelt sind Grundlage zur Gestaltung',
+          '- ist der Raum, in dem der Mensch seine Arbeit verrichtet\n- Natur und Umwelt sind Grundlage zur Gestaltung',
         plessner:
           '- Natur ist ein Bestandteil seines „Ichs“\n- Natur gibt körperliche Grundlage\n- Mensch kann nie vollständig in der Natur aufgehen',
         loewith:
-          '- Mensch ist direkter Teil der Natur\n- Natur ist der Ursprung, aber nicht die Heimat\n- Natur beherrscht den Menschen durch Gesetzte etc.',
+          '- Mensch ist direkter Teil der Natur\n- Natur ist der Ursprung, aber nicht die Heimat\n- Natur beherrscht den Menschen durch Gesetze etc.',
         gehlen:
           '- Natur überfordert den Menschen, ohne Kultur nicht lebensfähig\n- Natur ist Grundlage zur Umformung (z.B. Ressourcen)\n- Natur macht den Menschen zum Mängelwesen',
         kant:
@@ -369,7 +369,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         marx:
           '- Kultur ist die Voraussetzung für Ökonomie\n- entsteht aus den Klassen\n- Kultur wird zur Entfremdung umgewandelt',
         plessner:
-          '- Kultur ist „natürliche Künstlichkeit“\n- Reaktion auf die exzentrische Positionalität\n- Kultur hilft Spannung zwischen dem Innen- und Außenaspekt, wie Selbstzweifel zu minimieren',
+          '- Kultur ist „natürliche Künstlichkeit“\n- Reaktion auf die exzentrische Positionalität\n- Kultur hilft, die Spannung zwischen dem Innen- und Außenaspekt, wie Selbstzweifel, zu minimieren',
         loewith:
           '- Kultur ist das Ergebnis der Distanzierung von der Natur\n- zeigt Erkennen, Denken, und Freiheit des Menschen\n- ersetzt Mängel durch Ordnung und Orientierung',
         gehlen:
