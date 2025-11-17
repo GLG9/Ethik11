@@ -109,6 +109,13 @@
   line-height: 1.5;
 }
 
+.detail-body__text {
+  text-align: justify;
+  text-align-last: start;
+  hyphens: auto;
+  margin: 0;
+}
+
 .detail-actions {
   display: flex;
   flex-wrap: wrap;

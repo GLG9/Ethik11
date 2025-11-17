@@ -16,19 +16,49 @@
   gap: 0.6rem;
 }
 
-.eyebrow {
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
 .impressum-hero h1 {
   font-size: clamp(2rem, 3vw, 2.6rem);
 }
 
-.impressum-hero .intro {
-  color: var(--muted);
+.impressum-meta {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .impressum-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.impressum-card {
+  border-radius: 1.2rem;
+  border: 1px solid rgba(233, 225, 214, 0.1);
+  padding: 1.25rem;
+  background: rgba(22, 17, 14, 0.85);
+  display: grid;
+  gap: 0.6rem;
+}
+
+.meta-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meta-list li {
+  font-weight: 500;
+}
+
+.impressum-card address {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--text);
 }
 
 .impressum-grid {
@@ -82,4 +112,12 @@
   padding: 1rem 1.25rem;
   font-size: 0.95rem;
   text-align: center;
+}
+
+.impressum-footnote {
+  margin: 0 auto;
+  max-width: 720px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
 }

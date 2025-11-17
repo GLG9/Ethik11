@@ -19,8 +19,14 @@ type SourceSection = {
   styleUrl: './impressum.component.scss',
 })
 export class ImpressumComponent {
-  readonly intro =
-    'Wir führen sämtliche Recherchen, Bildnachweise und Beispielquellen transparent. Alle Inhalte dienen der historischen und didaktischen Verortung der Menschenbilder.';
+
+  readonly responsiblePersons = ['Gian Luca Gissy', 'Jasper Junge', 'Noah Kauter', 'Oscar Schulenburg'];
+
+  readonly addressLines = [
+    'Kurfürst-Joachim-Friedrich-Gymnasium Wolmirstedt',
+    'Schwimmbadstraße 1',
+    '39326 Wolmirstedt',
+  ];
 
   readonly sections: SourceSection[] = [
     {
@@ -119,6 +125,57 @@ export class ImpressumComponent {
         { label: 'Website Karl Löwith', url: 'https://jochenteuffel.com/tag/karl-lowith/' },
         { label: 'Bild Helmuth Pleßner', url: 'https://tu-dresden.de/gsw/phil/iso/hpr/ressourcen/bilder/helmuth-plessner/@@images/9ac5ef1c-3193-4a9b-98c9-574557223b92.jpeg' },
         { label: 'Website Helmuth Pleßner', url: 'https://tu-dresden.de/gsw/phil/iso/hpr/die-professur/prof-dr-fischer/hpg' },
+      ],
+    },
+    {
+      title: 'News – Bildquellen',
+      links: [
+        {
+          label: 'News: „Immer mehr Menschen in Arbeit unzufrieden!“',
+          url: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80',
+        },
+        {
+          label: 'News: „Flughafen liegt Lahm – Warnstreiks im Frühjahr 2025“',
+          url:
+            'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Rmx1Z2hhZmVufGVufDB8fDB8fHww',
+        },
+        {
+          label: 'News: „Social Media verzerrt Selbstbild“',
+          url:
+            'https://images.unsplash.com/photo-1724862936518-ae7fcfc052c1?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c29jaWFsJTIwbWVkaWF8ZW58MHx8MHx8fDA%3D',
+        },
+        {
+          label: 'News: „Emotionales Konzert“',
+          url: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80',
+        },
+        {
+          label: 'News: „Sommer 2021 – Zwei Italienerinnen in Alpen erfroren“',
+          url: 'https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?auto=format&fit=crop&w=1600&q=80',
+        },
+        {
+          label: 'News: „Schule ist bedeutende Erziehungseinrichtung“',
+          url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80',
+        },
+        {
+          label: 'News: „Fridays for Future kämpft gegen den Klimawandel“',
+          url:
+            'https://images.unsplash.com/photo-1569060368645-4ab30c8d8b0e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZnJpZGF5cyUyMGZvciUyMGZ1dHVyZXxlbnwwfHwwfHx8MA%3D%3D',
+        },
+        {
+          label: 'News: „Massentierhaltung nimmt weiter zu“',
+          url:
+            'https://images.unsplash.com/photo-1545468258-d895ac85938e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE1hc3NlbnRpZXJoYWx0dW5nfGVufDB8fDB8fHww',
+        },
+        {
+          label: 'News: „Corona Impfstoff – Streit oder Zusammenarbeit?“',
+          url:
+            'https://images.unsplash.com/photo-1611694449252-02453c27856a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1wZnN0b2ZmfGVufDB8fDB8fHww',
+        },
+        {
+          label: 'News: „Ukraine-Krieg“',
+          url:
+            'https://images.unsplash.com/photo-1647273426587-31512cdf2e50?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a3JpZWclMjB1a3JhaW5lfGVufDB8fDB8fHww',
+        },
       ],
     },
   ];

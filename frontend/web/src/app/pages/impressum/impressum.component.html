@@ -1,9 +1,22 @@
 <section class="impressum-page">
   <header class="impressum-hero">
-    <p class="eyebrow">Impressum & Quellen</p>
-    <h1>Transparenz für Seminare & Projekte</h1>
-    <p class="intro">{{ intro }}</p>
+    <h1>Impressum & Quellen</h1>
   </header>
+
+  <section class="impressum-meta">
+    <article class="impressum-card">
+      <h2>Verantwortlich für die Inhalte</h2>
+      <ul class="meta-list">
+        <li *ngFor="let person of responsiblePersons">{{ person }}</li>
+      </ul>
+    </article>
+    <article class="impressum-card">
+      <h2>Adresse</h2>
+      <address>
+        <span *ngFor="let line of addressLines">{{ line }}</span>
+      </address>
+    </article>
+  </section>
 
   <div class="impressum-grid">
     <article class="impressum-section" *ngFor="let section of sections">
@@ -23,5 +36,8 @@
   <p class="impressum-note">
     ⚠️ Alle Beispiele ohne explizite Quellenangabe sind fiktiv und dienen ausschließlich der Illustration
     der Menschenbilder und Denkansätze.
+  </p>
+  <p class="impressum-footnote">
+    Für die Erstellung dieser Webseite wurde ChatGPT als Hilfsmittel verwendet, um Trainingsdaten zeiteffizien in ein entsprechendes Format (.jsonl) zu bringen und Codex, um manche Elemente zu designen.
   </p>
 </section>

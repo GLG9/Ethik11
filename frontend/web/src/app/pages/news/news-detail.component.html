@@ -23,7 +23,7 @@
   </figure>
 
   <article class="detail-body">
-    <p *ngFor="let paragraph of item.body">{{ paragraph }}</p>
+    <p class="detail-body__text">{{ item.body.join(' ') }}</p>
     <div class="detail-actions">
       <a class="pill-link" routerLink="/news">Weitere Meldungen</a>
       <a

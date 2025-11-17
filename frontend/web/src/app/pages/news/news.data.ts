@@ -28,7 +28,7 @@ export const HERO_TEASER_IDS = ['marx-1', 'gehlen-1', 'loewith-1'];
 
 export const TICKER_HEADLINES = [
   'Flughafen liegt lahm – Warnstreiks im Frühjahr 2025',
-  'Immer mehr Menschen in Arbeit unzufrieden! – Karl Marx',
+  'Immer mehr Menschen in Arbeit unzufrieden!',
   'Social Media verzerrt Selbstbild',
   'Sommer 2021 – Zwei Italienerinnen in Alpen erfroren',
   'Fridays for Future kämpft gegen den Klimawandel',
@@ -39,7 +39,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     id: 'marx-1',
     philosopher: 'marx',
     kicker: 'Aktuelles · Karl Marx',
-    title: '„Immer mehr Menschen in Arbeit unzufrieden!“ -Karl Marx-',
+    title: '„Immer mehr Menschen in Arbeit unzufrieden!“',
     teaser:
       'Nach einer Studie der Website für Job-Beratung karriere.de sind 25% der Menschen in ihrer Arbeit unzufrieden mit steigender Tendenz.',
     body: [
@@ -71,7 +71,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Die Menschen fordern bessere Arbeitsbedingungen, da diese nicht vom Arbeitgeber, dem Kapitalisten, beachtet werden.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1517400508447-f8dd518b86db?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Rmx1Z2hhZmVufGVufDB8fDB8fHww',
       alt: 'Symbolbild: Demonstrierende Beschäftigte am Flughafen',
     },
     sourceUrl: 'https://www.verdi.de/themen/geld-tarif/++co++eccde3d4-fa8c-11ef-af3c-292fae8c70b0',
@@ -91,7 +91,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Damit entsprechen sie der „exzentrischen Positionalität“ von Pleßner.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1724862936518-ae7fcfc052c1?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c29jaWFsJTIwbWVkaWF8ZW58MHx8MHx8fDA%3D',
       alt: 'Symbolbild: Jugendliche mit Smartphone und Social-Media-App',
     },
   },
@@ -178,7 +178,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Die Kultur sagt ihm, dass er in Form von Demonstrationen dagegen vorgehen kann, denn der Mensch erkennt das er auch ein Teil der Natur ist, wenn auch nicht wie ein Tier.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1569060368645-4ab30c8d8b0e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZnJpZGF5cyUyMGZvciUyMGZ1dHVyZXxlbnwwfHwwfHx8MA%3D%3D',
       alt: 'Symbolbild: Klimademonstration mit Plakaten',
     },
   },
@@ -197,7 +197,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Der Mensch ist also durch die Kultur und deren Bereiche angepasst, und kommt nur so an Fleisch.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1545468258-d895ac85938e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fE1hc3NlbnRpZXJoYWx0dW5nfGVufDB8fDB8fHww',
       alt: 'Symbolbild: Stall mit vielen Tieren / Massentierhaltung',
     },
   },
@@ -217,7 +217,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Hier wird deutlich das der Mensch zum einen für sich arbeitet und egoistisch ist, zum anderen aber die Gesellschaft und andere braucht, um ein Ziel zu erreichen.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1611694449252-02453c27856a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1wZnN0b2ZmfGVufDB8fDB8fHww',
       alt: 'Symbolbild: Impfstoffproduktion im Labor',
     },
   },
@@ -236,7 +236,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
       'Also trotz dessen, dass Russland seine Macht sichern underweitern möchte, muss es in den internationalen Kontakt treten, um seine Existenz zu sichern.',
     ],
     image: {
-      src: 'https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=1600&q=80',
+      src: 'https://images.unsplash.com/photo-1647273426587-31512cdf2e50?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a3JpZWclMjB1a3JhaW5lfGVufDB8fDB8fHww',
       alt: 'Symbolbild: internationale Politik und Konflikt',
     },
   },
